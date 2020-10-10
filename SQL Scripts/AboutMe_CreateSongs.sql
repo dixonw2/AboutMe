@@ -15,6 +15,21 @@ CREATE TABLE IF NOT EXISTS song
 	FOREIGN KEY(year_id) REFERENCES year(id)
 );
 
+CREATE TABLE IF NOT EXISTS yearlycomment
+(
+	id SERIAL PRIMARY KEY,
+	comment TEXT
+);
+
+CREATE TABLE IF NOT EXISTS year
+(
+	id SERIAL PRIMARY KEY,
+	yearlycomment_id INT,
+	year INT,
+	CONSTRAINT fk_yearlycomment
+	FOREIGN KEY (yearlycomment_id) REFERENCES yearlycomment(id)
+);
+
 DO $$
 DECLARE v_year INT;
 BEGIN

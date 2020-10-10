@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using AboutMe.Entities;
 using Npgsql;
 
+using System.Data;
+using System.Data.Common;
+
 namespace AboutMe.DataModels
 {
     public class MusicDataModel
@@ -10,46 +13,52 @@ namespace AboutMe.DataModels
         public static IEnumerable<SongEntity> GetSongs(int year)
         {
             IList<SongEntity> results = new List<SongEntity>();
-
-            try
+            using (var conn = new NpgsqlConnection(CommonConstants.Constants.Database.DbConnectionString))
             {
-                var connString = "Host=localhost;Username=Wyatt;Password=;Database=AboutMe";
-                using var conn = new NpgsqlConnection(connString);
                 conn.Open();
-
-                // Retrieve all rows
-                using(var cmd = new NpgsqlCommand(@"SELECT s.id, s.song, s.artist, s.album, 
-                                                        s.genre, s.time, s.applemusiclink,
-                                                        s.spotifylink, y.year
-                                                    FROM song s
-                                                    JOIN year y on y.id = s.year_id
-                                                    WHERE y.year = @year", conn))
+                try
                 {
-                    cmd.Parameters.AddWithValue("year", year);
-                    using(var rdr = cmd.ExecuteReader())
+                    using (var cmd = new NpgsqlCommand(string.Empty, conn))
                     {
-                        while (rdr.Read())
+                        cmd.CommandText = @"
+                        SELECT s.id, s.song, s.artist, s.album, 
+                            s.genre, s.time, s.applemusiclink,
+                            s.spotifylink, y.year
+                        FROM song s
+                        JOIN year y on y.id = s.year_id
+                        WHERE y.year = @year
+                    ";
+                        cmd.Parameters.AddWithValue("year", year);
+                        using (var rdr = cmd.ExecuteReader())
                         {
-                            results.Add(new SongEntity()
+                            while (rdr.Read())
                             {
-                                Id = rdr.GetInt32(0),
-                                    Song = rdr.GetString(1),
-                                    Artist = rdr.GetString(2),
-                                    Album = rdr.GetString(3),
-                                    Genre = rdr.GetString(4),
-                                    Time = rdr.GetString(5),
-                                    AppleMusicLink = rdr.GetString(6),
-                                    SpotifyLink = rdr.GetString(7),
-                                    Year = rdr.GetInt32(8)
-                            });
+                                results.Add(new SongEntity()
+                                {
+                                    Id = (int)rdr["id"],
+                                    Song = (string)rdr["song"],
+                                    Artist = (string)rdr["artist"],
+                                    Album = (string)rdr["album"],
+                                    Genre = (string)rdr["genre"],
+                                    Time = (string)rdr["time"],
+                                    AppleMusicLink = (string)rdr["applemusiclink"],
+                                    SpotifyLink = (string)rdr["spotifylink"],
+                                    Year = (int)rdr["year"]
+                                });
+                            }
                         }
                     }
                 }
+                catch (Exception e)
+                {
+                    Console.WriteLine($"MusicDataModel.GetSongs: {e.Message}");
+                }
+                finally
+                {
+                    conn.Close();
+                }
             }
-            catch (Exception e)
-            {
-                Console.WriteLine($"MusicDataModel.GetSongs: {e.Message}");
-            }
+
             return results;
         }
     }
