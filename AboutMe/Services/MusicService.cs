@@ -7,9 +7,14 @@ namespace AboutMe.Services
 {
     public class MusicService
     {
-        public static IEnumerable<SongEntity> GetSongsForYear(int year)
+        public static List<SongEntity> GetSongsForYear(int year)
         {
             return MusicDataModel.GetSongs(year);
+        }
+
+        public static string GetCommentForYear(int year)
+        {
+            return MusicDataModel.GetComment(year);
         }
     }
 }

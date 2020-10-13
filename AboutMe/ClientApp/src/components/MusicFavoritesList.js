@@ -1,4 +1,7 @@
 import React, { Component } from 'react';
+import Tabs from 'react-bootstrap/Tabs';
+import Tab from 'react-bootstrap/Tab';
+import { SongTable } from './SongTable';
 
 export class MusicFavoritesList extends Component {
   static displayName = MusicFavoritesList.name;
@@ -14,30 +17,19 @@ export class MusicFavoritesList extends Component {
 
   static renderSongsTable(songs) {
     return (
-      <table className='table table-striped' aria-labelledby="tabelLabel">
-        <thead>
-          <tr>
-            <th>Song</th>
-            <th>Artist</th>
-            <th>Album</th>
-            <th>Genre</th>
-            <th>Time</th>
-            <th>Streaming Links</th>
-          </tr>
-        </thead>
-        <tbody>
-          {songs.map(song =>
-            <tr key={song.id}>
-              <td>{song.song}</td>
-              <td>{song.artist}</td>
-              <td>{song.album}</td>
-              <td>{song.genre}</td>
-              <td>{song.time}</td>
-              <td><a href={song.appleMusicLink} target="_blank">Apple</a> <a href={song.spotifyLink} target="_blank">Spoot</a></td>
-            </tr>
-          )}
-        </tbody>
-      </table>
+      <>
+        <Tabs defaultActiveKey="2017" id="uncontrolled-tab-example">
+          <Tab eventKey="2017" title="2017">
+            <SongTable year='2017'/>
+          </Tab>
+          <Tab eventKey="2018" title="2018">
+            <SongTable year='2018'/>
+          </Tab>
+          <Tab eventKey="2019" title="2019">
+            <SongTable year='2019'/>
+          </Tab>
+        </Tabs>
+      </>
     );
   }
 
@@ -48,7 +40,7 @@ export class MusicFavoritesList extends Component {
 
     return (
       <div>
-        <h1 id="tabelLabel" >Favorite Songs List of{this.state.loading ? "..." : " " + this.state.songs[0].year}</h1>
+        <h1 id="tabelLabel" style={{textAlign: "center"}}>Favorite Songs List</h1>
         <p>This component demonstrates fetching data from the server.</p>
         {contents}
       </div>
@@ -56,7 +48,7 @@ export class MusicFavoritesList extends Component {
   }
 
   async populateSongData() {
-    const response = await fetch('music');
+    const response = await fetch('api/music');
     const data = await response.json();
     this.setState({ songs: data, loading: false });
   }
