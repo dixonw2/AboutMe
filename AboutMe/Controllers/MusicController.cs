@@ -6,18 +6,14 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using AboutMe.Entities;
 using AboutMe.DataModels;
+using AboutMe.Services;
 
 namespace AboutMe.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     public class MusicController : ControllerBase
     {
-        private static readonly string[] Summaries = new[]
-        {
-            "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-        };
-
         private readonly ILogger<MusicController> _logger;
 
         public MusicController(ILogger<MusicController> logger)
@@ -28,10 +24,12 @@ namespace AboutMe.Controllers
         [HttpGet]
         public IEnumerable<SongEntity> GetSongEntities()
         {
-            IEnumerable<SongEntity> results = new List<SongEntity>();
+            List<SongEntity> results = new List<SongEntity>();
             try
             {
-                results = MusicDataModel.GetSongs(2017);
+                results = MusicService.GetSongsForYear(2017);
+                results.AddRange(MusicService.GetSongsForYear(2018));
+                results.AddRange(MusicService.GetSongsForYear(2019));
             }
             catch (Exception e)
             {
@@ -40,5 +38,38 @@ namespace AboutMe.Controllers
 
             return results;
         }
+
+        [HttpGet("getyear/{year}")]
+        public IEnumerable<SongEntity> GetSongsByYear(int year)
+        {
+            List<SongEntity> results = new List<SongEntity>();
+            try
+            {
+                results = MusicService.GetSongsForYear(year);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine($"MusicController.GetSongsByYear: {e.Message}");
+            }
+
+            return results;
+        }
+
+        [HttpGet("getyearcomment/{year}")]
+        public string GetCommentForYear(int year)
+        {
+            var result = string.Empty;
+            try
+            {
+                result = MusicService.GetCommentForYear(year);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine($"MusicController.GetCommentForYear: {e.Message}");
+            }
+
+            return result;
+        }
+
     }
 }
