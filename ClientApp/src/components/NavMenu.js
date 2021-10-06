@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Container, Nav, Navbar, NavDropdown } from 'react-bootstrap';
+import { Col, Container, Nav, Navbar, NavDropdown, Row } from 'react-bootstrap';
 import './NavMenu.css';
 
 export class NavMenu extends Component {
@@ -25,14 +25,20 @@ export class NavMenu extends Component {
       <header>
         <Navbar bg='dark' variant='dark'>
           <Container>
-          <Navbar.Brand href='/'>Wyatt Dixon</Navbar.Brand>
-            <Nav>
-              <Nav.Link href='/counter'>Counter</Nav.Link>
-              <Nav.Link href='/fetch-data'>Weather</Nav.Link>
-              <NavDropdown title='Music'>
-                <NavDropdown.Item href='/music/favoritesongs'>Favorite Songs of the Year</NavDropdown.Item>
-              </NavDropdown>
-            </Nav>
+            <Row>
+              <Col>
+                <Navbar.Brand href='/'>Wyatt Dixon</Navbar.Brand>
+              </Col>
+              <Col>
+                <Nav>
+                  <Nav.Link href='/counter'>Counter</Nav.Link>
+                  <Nav.Link href='/fetch-data'>Weather</Nav.Link>
+                  <NavDropdown title='Music'>
+                    <NavDropdown.Item href='/music/favoritesongs'>Favorite Songs of the Year</NavDropdown.Item>
+                  </NavDropdown>
+                </Nav>
+              </Col>
+            </Row>
           </Container>
         </Navbar>
       </header>
