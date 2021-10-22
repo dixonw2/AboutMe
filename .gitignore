@@ -230,3 +230,6 @@ _Pvt_Extensions
 
 # FAKE - F# Make
 .fake/
+
+#launchSettings to protect database details
+./Properties/launchSettings.json

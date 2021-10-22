@@ -4,9 +4,10 @@ import { Layout } from './components/Layout';
 import { Home } from './components/Home';
 import { FetchData } from './components/FetchData';
 import { Counter } from './components/Counter';
-import { NotFoundPage } from './components/NotFoundPage';
+import { PageNotFound } from './components/PageNotFound';
 
 import './custom.css'
+import { FavoriteSongs } from './components/FavoriteSongs';
 
 export default class App extends Component {
   static displayName = App.name;
@@ -18,7 +19,8 @@ export default class App extends Component {
           <Route exact path='/' component={Home} />
           <Route path='/counter' component={Counter} />
           <Route path='/fetch-data' component={FetchData} />
-          <Route component={NotFoundPage} />
+          <Route exact path='/music/favoritesongs' component={FavoriteSongs} />
+          <Route component={PageNotFound} />
         </Switch>
       </Layout>
     );
