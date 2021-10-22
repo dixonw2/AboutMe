@@ -25,17 +25,21 @@ namespace Controllers
 		[HttpGet("songs/all")]
 		public IEnumerable<Song> GetSongs()
 		{
-			return _dap.GetSongRecords();
+			return _dap.GetSongRecords().OrderBy(song => song.Id);
 		}
 
 		[HttpGet("songs/{year}")]
 		public IEnumerable<Song> GetSongsForYear(int year)
 		{
-			return from s in _dap.GetSongRecords()
+			// ignore article adjectives (a/an/the) when sorting
+			return (from s in _dap.GetSongRecords()
 				join my in _dap.GetYearRecords()
 				on s.IdYear equals my.Id
 				where my.Year == year
-				select s;
+				select s).OrderBy(song => song.Artist.StartsWith("A ") ? song.Artist.Substring(2, song.Artist.Length - 2)
+					: song.Artist.StartsWith("An ") ? song.Artist.Substring(3, song.Artist.Length - 3)
+					: song.Artist.StartsWith("The ") ? song.Artist.Substring(4, song.Artist.Length - 4)
+					: song.Artist);
 		}
 		#endregion
 

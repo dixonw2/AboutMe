@@ -37,6 +37,7 @@ DECLARE
 	v_year2017 INT;
 	v_year2018 INT;
 	v_year2019 INT;
+	v_year2020 INT;
 BEGIN
 
 CREATE TEMP TABLE v_year
@@ -47,7 +48,8 @@ CREATE TEMP TABLE v_year
 INSERT INTO v_year VALUES
 	(2017),
 	(2018),
-	(2019);
+	(2019),
+	(2020);
 
 INSERT INTO "MusicYear" ("Year")
 SELECT vy.year
@@ -58,6 +60,7 @@ WHERE y."Id" IS NULL;
 v_year2017 := (SELECT "Id" FROM "MusicYear" WHERE "Year" = 2017);
 v_year2018 := (SELECT "Id" FROM "MusicYear" WHERE "Year" = 2018);
 v_year2019 := (SELECT "Id" FROM "MusicYear" WHERE "Year" = 2019);
+v_year2020 := (SELECT "Id" FROM "MusicYear" WHERE "Year" = 2020);
 
 CREATE TEMP TABLE v_yearlycomment
 (
@@ -68,7 +71,8 @@ CREATE TEMP TABLE v_yearlycomment
 INSERT INTO v_yearlycomment VALUES
 	('2017 was the first year I made this list, and was before I made the rule of only one song per artist.  Looking back on it, I most definitely would switch out about half the songs with other ones released that year.  I find this to be the case with every year, however.  Sometimes it''s because my taste in music evolves, but it mostly seems to be because I start listening to a song the year after it''s released, especially if it was late in the year.  This is the year where it''s the former rather than the latter, however.--+--Out of my existing list, though, the three that I''ve kept listening to consistently since are Bear Claws, How Do You Feel?, and Less Than.', v_year2017),
 	('After not liking that my 2017 list contained a couple songs from the same artist, I decided to impose the rule of no more than one song per artist.  An artist/band being featured on another artist/band''s song is okay, but it explicitly cannot be their song.  This made it more interesting for me since not only did I have to narrow down to a single song off of an album, I listened to songs and albums by other artists I may not have listened to before.--+--As far as songs I would switch out with other ones released in 2018, I would probably switch out a couple at most.  I really enjoyed most of the music I listened to that year and haven''t discovered more than a couple songs released in 2018 since that I would replace the others with.--+--Out of my existing list, the three I''ve continued listening to the most is difficult to pin down, but most likely Starlight, What is Love?, and Voices in My Head.', v_year2018),
-	('This year actually was somewhat difficult to get enough songs for the list.  There were five albums that I primarily listened to because they were so good, meaning I didn''t listen to more artists I would have liked to because I had those albums almost exclusively on repeat at various times throughout the year.  If I did not create the rule of no more than one song per artist this list would have consisted of songs primarily by FEVER 333, BABYMETAL, TWICE, and The Maine.  I''m pretty sure the entire summer of 2019 I listened to almost exclusively FEVER 333, and October and November seemed as if BABYMETAL and TWICE had a reservation for my ears.  I ultimately decided on enough songs to consist of a solid list, though.--+--As with 2018, there''s one song, maybe two I would switch out with a song on this list, but overall I think the list was a pretty good one.--+--Out of my existing list, the three I''ve continued listening to the most, without question, are Brand New Day, LOVE FOOLISH, and THE INNOCENT.', v_year2019);
+	('This year actually was somewhat difficult to get enough songs for the list.  There were five albums that I primarily listened to because they were so good, meaning I didn''t listen to more artists I would have liked to because I had those albums almost exclusively on repeat at various times throughout the year.  If I did not create the rule of no more than one song per artist this list would have consisted of songs primarily by FEVER 333, BABYMETAL, TWICE, and The Maine.  I''m pretty sure the entire summer of 2019 I listened to almost exclusively FEVER 333, and October and November seemed as if BABYMETAL and TWICE had a reservation for my ears.  I ultimately decided on enough songs to consist of a solid list, though.--+--As with 2018, there''s one song, maybe two I would switch out with a song on this list, but overall I think the list was a pretty good one.--+--Out of my existing list, the three I''ve continued listening to the most, without question, are Brand New Day, LOVE FOOLISH, and THE INNOCENT.', v_year2019),
+	('TWICE makes their third appearance, as does BABYMETAL (even if it is just a feature)!  If I had been more into TWICE in 2017, they would have made an appearance every year since I''ve started this.  Overall, I was somewhat pleased with the music released in 2020.  System of a Down, a favorite of mine, released their first music in over a decade.  Selena Gomez and DREAMCATCHER, a new find for me, had superb albums released at the beginning of the year (vividly remember because of COVID), so it was difficult picking one song from each album.  Besides those and the FEVER 333 song, though, I kind of struggled to really get a solid top 13.  John the Ghost is the singer for one of my favorite bands that have made many appearances already (The Maine), so that wasn''t very difficult, but otherwise there are a few songs I haven''t listened to much since.  I had hoped that quarantine would provide artists with some more time, but of course they may have easily just taken it as time off.  I had several concerts lined up for this year, and every single one got cancelled, so it would make sense.--+--Out of this year, the three songs I''ve continued to listen to are A Sweeter Place, UP NO MORE, and PRESENCE IS STRENGTH.', v_year2020);
 
 INSERT INTO "YearlyComment" ("Comment", "IdYear")
 SELECT vyc.comment, vyc.idyear
@@ -129,7 +133,21 @@ INSERT INTO v_songs (songname, artist, album, genre, time, applemusiclink, spoti
 	('Nero Forte', 'Slipknot', 'We Are Not Your Kind', 'Metal', '5:15', 'https://music.apple.com/us/album/nero-forte/1463706038?i=1463706044', 'https://open.spotify.com/track/56fiFTRrSiHHH3gBeaTg2P?si=_rMlPQsyRJSctPAQGLb80w', v_year2019),
 	('Descending', 'Tool', 'Fear Inoculum', 'Rock', '13:38', 'https://music.apple.com/us/album/descending/1475686696?i=1475687061', 'https://open.spotify.com/track/0aTiUssEOy0Mt69bsavj6K?si=qKoZqggfQe2JniXWa6oWCg', v_year2019),
 	('LOVE FOOLISH', 'TWICE', 'Feel Special', 'K-Pop', '3:11', 'https://music.apple.com/us/album/love-foolish/1500796072?i=1500796478', 'https://open.spotify.com/track/5ipJi9h2ghaThn6EUwO3B2?si=p8ZSd5rpSzCE9QHjZ33TvA', v_year2019),
-	('Blow Me (feat. Jason Aalon Butler)', 'The Used', 'Heartwork', 'Rock', '3:21', 'https://music.apple.com/us/album/blow-me-feat-jason-aalon-butler/1496886925?i=1496887423', 'https://open.spotify.com/track/1vS7jjy99wfMVVC9nzZtX1?si=dT74ShvvRtGcUfwlkU0fsw', v_year2019);
+	('Blow Me (feat. Jason Aalon Butler)', 'The Used', 'Heartwork', 'Rock', '3:21', 'https://music.apple.com/us/album/blow-me-feat-jason-aalon-butler/1496886925?i=1496887423', 'https://open.spotify.com/track/1vS7jjy99wfMVVC9nzZtX1?si=dT74ShvvRtGcUfwlkU0fsw', v_year2019),
+
+	('Animals', 'Architects', 'For Those That Wish to Exist', 'Hard Rock', '4:04', 'https://music.apple.com/us/album/little-wonder/1533388849?i=1533388858', 'https://open.spotify.com/track/1Td7TGT1XtK2ojUjz1mGUV?si=8cfe9090e1c74da5', v_year2020),
+	('Lemons', 'Ashley Tisdale', 'Lemons - Single', 'Pop', '2:39', 'https://music.apple.com/us/album/lemons/1514508650?i=1514508651', 'https://open.spotify.com/track/0Wes7TZVfPo4M1TK5c3F8Y?si=99cdb687f4d6478f', v_year2020),
+	('Kingslayer (feat. BABYMETAL)', 'Bring Me The Horizon', 'POST HUMAN: SURVIVAL HORROR', 'Hard Rock', '3:40', 'https://music.apple.com/us/album/kingslayer-feat-babymetal/1535067172?i=1535067323', 'https://open.spotify.com/track/7CAbF0By0Fpnbiu6Xn5ZF7?si=34aad5b265ff4cd3', v_year2020),
+	('Paradise', 'DREAMCATCHER', 'Dystopia: The Tree of Language', 'K-Pop', '4:04', 'https://music.apple.com/us/album/paradise/1499456109?i=1499456122', 'https://open.spotify.com/track/2zCUaUgenXGzhMQztjf9qd?si=f43911e7157a4a7d', v_year2020),
+	('PRESENCE IS STRENGTH', 'FEVER 333', 'PRESENCE IS STRENGTH - Single', 'Rock', '2:42', 'https://music.apple.com/us/album/presence-is-strength/1501840074?i=1501840075', 'https://open.spotify.com/track/7kpYImqzb3AswxjNr1vkeq?si=5408615cb33a4afd', v_year2020),
+	('MAGO', 'GFRIEND', '回:Walpurgis Night', 'K-Pop', '3:19', 'https://music.apple.com/us/album/mago/1538729549?i=1538729550', 'https://open.spotify.com/track/46WaBBaEHzgbN88Ew0nh50?si=21407c3e95834d53', v_year2020),
+	('Age of Machine', 'Greta Van Fleet', 'The Battle At Garden''s Gate', 'Rock', '6:54', 'https://music.apple.com/us/album/age-of-machine/1543007580?i=1543008237', 'https://open.spotify.com/track/6XALorRRo9aQdBIQN0UWyn?si=fc0671ef66e04b87', v_year2020),
+	('Rolled Down Window', 'John the Ghost', 'For Those That Wish to Exist', 'Alternative', '4:04', 'https://music.apple.com/us/album/little-wonder/1533388849?i=1533388858', 'https://open.spotify.com/track/1Td7TGT1XtK2ojUjz1mGUV?si=8cfe9090e1c74da5', v_year2020),
+	('A Sweeter Place (feat. Kid Cudi)', 'Selena Gomez', 'Rare', 'Pop', '4:23', 'https://music.apple.com/us/album/a-sweeter-place-feat-kid-cudi/1488413282?i=1488413386', 'https://open.spotify.com/track/4bb94wZVF1cX66vQjNeJTX?si=ba26a9b500954e9e', v_year2020),
+	('Brothers (feat. Eddy Capparelli)', 'SIAMES', 'Home', 'Indie Pop', '4:06', 'https://music.apple.com/us/album/brothers-feat-eddy-capparelli/1495889131?i=1495889434', 'https://open.spotify.com/track/2Hla6QVdb2fJhQonnGLksC?si=271d5259de6b42d6', v_year2020),
+	('Am I Talking To The Champagne (Or Talking To You)', 'The Struts', 'Strange Days', 'Rock', '5:47', 'https://music.apple.com/us/album/am-i-talking-to-the-champagne-or-talking-to-you/1530101176?i=1530101585', 'https://open.spotify.com/track/05h4hfkCzXIVBjju9chzxa?si=5d69cde9f1cc4153', v_year2020),
+	('Protect The Land', 'System of a Down', 'Protect The Land - Single', 'Rock', '5:08', 'https://music.apple.com/us/album/protect-the-land/1538616280?i=1538616285', 'https://open.spotify.com/track/11ajcVj3qSyyMPUpTJUP3y?si=7cea37d17ebc48c5', v_year2020),
+	('UP NO MORE', 'TWICE', 'Eyes wide open', 'K-Pop', '3:34', 'https://music.apple.com/us/album/up-no-more/1535654236?i=1535654254', 'https://open.spotify.com/track/1LiNP5q2thWScdvCRkJ584?si=08b0d3d4278b4b10', v_year2020);
 
 INSERT INTO "Song" ("SongName", "Artist", "Album", "Genre", "Time", "AppleMusicLink", "SpotifyLink", "IdYear")
 SELECT vs.songname, vs.artist, vs.album, vs.genre, vs.time, vs.applemusiclink, vs.spotifylink, vs.idyear
