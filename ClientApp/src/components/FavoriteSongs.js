@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Tabs, Tab, Container, Row } from 'react-bootstrap';
+import { Tabs, Tab } from 'react-bootstrap';
 import { FavoriteSongsTable } from './FavoriteSongsTable';
 import { FavoriteSongsComment } from './FavoriteSongsComment';
 
@@ -21,7 +21,7 @@ export class FavoriteSongs extends Component {
     let songTables = this.state.loading ?
       <p><em>Loading...</em></p>
       : 
-      <Container>
+      <>
         <Tabs defaultActiveKey={this.state.years[0].id} className='mb-3'>
           {this.state.years.map(year =>
             <Tab key={year.id} eventKey={year.id} title={year.year}>
@@ -30,15 +30,11 @@ export class FavoriteSongs extends Component {
             </Tab>
           )}
         </Tabs>
-      </Container>
+      </>
     return (
       <>
-        <h1>Favorite Songs</h1>
-          <Container>
-            <Row>
-              {songTables}
-            </Row>
-          </Container>
+        <h1>13 Favorite Songs</h1>
+        {songTables}
       </>
     )
   }

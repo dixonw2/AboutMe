@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Container, Nav, Navbar, NavDropdown } from 'react-bootstrap';
+import { Nav, Navbar, NavDropdown } from 'react-bootstrap';
 import './NavMenu.css';
 
 export class NavMenu extends Component {
@@ -11,20 +11,22 @@ export class NavMenu extends Component {
 
   render () {
     return (
-      <Navbar collapseOnSelect expand="lg" bg='dark' variant='dark'>
-        <Container>
-          <Navbar.Brand href='/'>Wyatt Dixon</Navbar.Brand>
-          <Navbar.Toggle aria-controls='responsive-navbar-nav' />
-          <Navbar.Collapse id='responsive-navbar-nav'>
-            <Nav className="ms-auto">
-              <Nav.Link href='/counter'>Counter</Nav.Link>
-              <Nav.Link href='/fetch-data'>Weather</Nav.Link>
-              <NavDropdown title='Music'>
-                <NavDropdown.Item href='/music/favoritesongs'>Favorite Songs</NavDropdown.Item>
-              </NavDropdown>
-            </Nav>
-          </Navbar.Collapse>
-        </Container>
+      <Navbar style={{width: "100%", paddingLeft: 10, paddingRight: 10}} 
+          collapseOnSelect expand="lg" bg='dark' variant='dark'>
+        <Navbar.Brand href='/'>Wyatt Dixon</Navbar.Brand>
+        <Navbar.Toggle aria-controls='responsive-navbar-nav' />
+        <Navbar.Collapse id='responsive-navbar-nav'>
+          <Nav className='ms-auto'>
+            <Nav.Link href='/counter'>Counter</Nav.Link>
+            <Nav.Link href='/fetch-data'>Weather</Nav.Link>
+            <NavDropdown align='end' title='Music'>
+              <NavDropdown.Item href='/music/myhistory'>My History</NavDropdown.Item>
+              <NavDropdown.Item href='/music/instrumentsplayed'>Instruments Played</NavDropdown.Item>
+              <NavDropdown.Divider />
+              <NavDropdown.Item href='/music/favoritesongs'>Favorite Songs of the Year</NavDropdown.Item>
+            </NavDropdown>
+          </Nav>
+        </Navbar.Collapse>
       </Navbar>
     );
   }
