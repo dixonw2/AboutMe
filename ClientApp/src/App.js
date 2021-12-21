@@ -8,6 +8,7 @@ import { PageNotFound } from './components/PageNotFound';
 
 import './custom.css'
 import { FavoriteSongs } from './components/FavoriteSongs';
+import { MusicHistory } from './components/MusicHistory';
 
 export default class App extends Component {
   static displayName = App.name;
@@ -19,6 +20,8 @@ export default class App extends Component {
           <Route exact path='/' component={Home} />
           <Route path='/counter' component={Counter} />
           <Route path='/fetch-data' component={FetchData} />
+          <Route path='/music/myhistory' component={MusicHistory} />
+          <Route exact path='/music/instrumentsplayed' />
           <Route exact path='/music/favoritesongs' component={FavoriteSongs} />
           <Route component={PageNotFound} />
         </Switch>
