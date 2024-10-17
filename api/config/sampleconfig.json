@@ -1,0 +1,6 @@
+{
+  "dbUser": "UserName",
+  "dbPassword": "Password",
+  "dbServer": "DbServer",
+  "dbName": "DbName"
+}
