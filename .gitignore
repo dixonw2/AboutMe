@@ -1,0 +1,27 @@
+# Python cache files
+__pycache__/
+*.py[cod]
+
+# Virtual environment
+env/
+
+# Configuration files
+/api/config/config.json
+
+# VSCode settings
+.vscode/
+
+# Other potential sensitive files
+*.db
+*.sqlite3
+
+# Ignore any log files
+*.log
+
+# Ignore compiled files
+*.so
+*.pyd
+
+# Ignore backups
+*~
+checklist
