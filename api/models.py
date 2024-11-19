@@ -21,4 +21,4 @@ class YearsComments(Base):
     __tablename__ = 'YearsComments'
 
     year = Column('Year', Integer, primary_key=True, index=True)
-    comment = Column('Comment', String, nullable=False)
+    comment = Column('Comment', String, index=True, nullable=False)
