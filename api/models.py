@@ -14,7 +14,7 @@ class Songs(Base):
     year = Column('Year', Integer, index=True, nullable=False)
 
     __table_args__ = (
-        PrimaryKeyConstraint('SongName', 'Artist'),
+        PrimaryKeyConstraint('SongName', 'Artist')
     )
 
 class YearsComments(Base):

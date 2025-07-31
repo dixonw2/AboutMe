@@ -52,14 +52,20 @@ def get_db():
 db_dependency = Annotated[Session, Depends(get_db)]
 models.Base.metadata.create_all(bind=engine)
 
-@router.get("/songs", response_model=List[SongsBase], description="Returns all songs")
-async def get_all_songs(db: db_dependency):
-	return db.query(models.Songs).all()
+@router.get("/songs", response_model=List[SongsBase], description="Returns favorite songs from a list I've made every year since 2017.")
+async def get_songs(db: db_dependency, year: Optional[int] = None):
+	songs_list = db.query(models.Songs)
+	if year is not None:
+		songs_list = songs_list.filter(models.Songs.year == year)
+	return songs_list.all()
 
 
-@router.get("/comments", response_model=List[YearsCommentsBase], description="Returns all years' comments")
-async def get_all_comments(db: db_dependency):
-	return db.query(models.YearsComments).all()
+@router.get("/comments", response_model=List[YearsCommentsBase], description="Returns the comment for each year")
+async def get_all_comments(db: db_dependency, year: Optional[int] = None):
+	comments_list = db.query(models.YearsComments)
+	if year is not None:
+		comments_list = comments_list.filter(models.YearsComments.year == year)
+	return comments_list.all()
 
 
 app.include_router(router, prefix="/api")
