@@ -5,7 +5,7 @@ import datetime
 import random
 from fastapi import FastAPI, APIRouter, HTTPException, Depends
 from typing import Annotated, List, Optional
-from sqlalchemy import select
+from sqlalchemy import select, case, func, literal_column
 from sqlalchemy.orm import Session
 from pydantic import BaseModel
 from database import SessionLocal, engine
@@ -72,7 +72,22 @@ async def get_songs(db: db_dependency, year: Optional[int] = None):
 	song_list = select(models.Songs)
 	if year is not None:
 		song_list = song_list.where(models.Songs.year == year)
-	return db.scalars(song_list)
+
+	songs = db.scalars(song_list).all()
+
+	def strip_article(artist: str) -> str:
+		lower = artist.lower()
+		if lower.startswith("a "):
+			return artist[2:]
+		if lower.startswith("an "):
+			return artist[3:]
+		if lower.startswith("the "):
+			return artist[4:]
+		return artist
+
+	songs = sorted(songs, key=lambda song: strip_article(song.artist))
+
+	return songs
 
 
 @router.get("/music/favorite-songs/years", response_model=List[int], description="Get a list of the years that have a Favorite Songs list.")
@@ -104,7 +119,7 @@ async def get_triple_triad_cards(db: db_dependency, level: Optional[int] = None,
 async def get_random_cards(db: db_dependency, count: Optional[int] = 20, weighted: Optional[bool] = False):
 	cards = db.scalars(select(models.TripleTriadCards)).all()
 
-	def get_weight(card):
+	def get_weight(card: TripleTriadCardsBase) -> float:
 		level = card.level
 		if level in [3, 4]:
 			return 10  # Most common
@@ -141,3 +156,6 @@ async def get_random_cards(db: db_dependency, count: Optional[int] = 20, weighte
 #endregion
 
 app.include_router(router, prefix="/api")
+
+#TODO: Remove extra "Loading" from subcomponents like YearlyComment, etc. Only have loading in FetchData so it's not repeated
+#TODO: Make songs order by artist ignoring article adjective
