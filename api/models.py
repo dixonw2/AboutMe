@@ -14,7 +14,7 @@ class Songs(Base):
     year = Column('Year', Integer, index=True, nullable=False)
 
     __table_args__ = (
-        PrimaryKeyConstraint('SongName', 'Artist')
+        PrimaryKeyConstraint('SongName', 'Artist'),
     )
 
 class YearsComments(Base):
@@ -22,3 +22,14 @@ class YearsComments(Base):
 
     year = Column('Year', Integer, primary_key=True, index=True)
     comment = Column('Comment', String, index=True, nullable=False)
+
+class TripleTriadCards(Base):
+    __tablename__ = 'TripleTriadCards'
+    
+    card_name = Column('CardName', String(256), primary_key=True, index=True)
+    left = Column('Left', Integer, index=True, nullable=False)
+    up = Column('Up', Integer, index=True, nullable=False)
+    right = Column('Right', Integer, index=True, nullable=False)
+    down = Column('Down', Integer, index=True, nullable=False)
+    element = Column('Element', String(32), index=True, nullable=True)
+    level = Column('Level', Integer, index=True, nullable=False)
