@@ -1,43 +1,40 @@
-import React, { Component } from "react";
+import React, { useEffect, useState } from "react";
 
-export class YearlyComment extends Component {
-  static displayName = YearlyComment.name;
+export default function YearlyComment({ year }) {
+  const [comment, setComment] = useState(null);
+  const [loading, setLoading] = useState(true);
 
-  constructor(props) {
-    super(props);
-    this.state = { comment: null, loading: true };
-  }
+  useEffect(() => {
+    const getYearlyComment = async () => {
+      const params = new URLSearchParams();
+      if (year !== undefined && year !== null) {
+        params.append("year", year);
+      }
+      const response = await fetch(
+        `api/music/favorite-songs/comments?${params.toString()}`
+      );
+      const commentData = await response.json();
+      setComment(commentData[0]);
+      setLoading(false);
+    };
 
-  componentDidMount() {
-    this.getYearlyComment();
-  }
+    getYearlyComment();
+  }, [year]);
 
-  render() {
-    const { loading, comment } = this.state;
-    if (loading) {
-      return <em>Loading...</em>;
-    }
-
-    const text = comment[0]?.comment ?? "";
+  if (loading) {
     return (
-      <>
-        {text.split("\n").map((line, index) => (
-          <p key={index}>{line}</p>
-        ))}
-      </>
+      <p>
+        <em>Loading...</em>
+      </p>
     );
   }
 
-  async getYearlyComment() {
-    const params = new URLSearchParams();
-    if (this.props.year !== undefined && this.props.year !== null) {
-      params.append("year", this.props.year);
-    }
-    const response = await fetch(
-      `api/music/favorite-songs/comments?${params.toString()}`
-    );
-    const comment = await response.json();
-    console.log(`${this.props.year} Comment:`, comment);
-    this.setState({ comment: comment, loading: false });
-  }
+  const text = comment?.comment ?? "";
+  return (
+    <>
+      {text.split("\n").map((line, index) => (
+        <p key={index}>{line}</p>
+      ))}
+    </>
+  );
 }

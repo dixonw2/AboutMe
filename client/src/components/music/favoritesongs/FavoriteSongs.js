@@ -1,55 +1,50 @@
-import React, { Component } from "react";
+import React, { useEffect, useState } from "react";
 import { Tab, Tabs } from "react-bootstrap";
-import { SongTable } from "./SongTable";
-import { YearlyComment } from "./YearlyComment";
+import SongsTable from "./SongsTable";
+import YearlyComment from "./YearlyComment";
 
-export class FavoriteSongs extends Component {
-  static displayName = FetchData.name;
+export default function FavoriteSongs() {
+  const [years, setYears] = useState([]);
+  const [loading, setLoading] = useState(true);
+  // default so it says "Favorite Songs of the Year" while loading
+  const [activeTab, setActiveTab] = useState("the Year");
 
-  constructor(props) {
-    super(props);
-    this.state = { years: [], loading: true };
-  }
+  useEffect(() => {
+    const getYears = async () => {
+      const response = await fetch("api/music/favorite-songs/years");
+      const years = await response.json();
+      // defaults activeTab to "The Year" in the case that the server is slow
+      setYears(years);
+      setLoading(false);
+      setActiveTab(years[0]);
+    };
 
-  componentDidMount() {
-    this.getYears();
-  }
+    getYears();
+  }, []);
 
-  static renderSongsTabs(years) {
-    return (
-      <>
-        <Tabs defaultActiveKey={years[0]} id="years-tabs" className="mb-3">
+  return (
+    <>
+      <h1 id="favoriteSongs">Favorite Songs of {activeTab}</h1>
+
+      {loading ? (
+        <p>
+          <em>Loading...</em>
+        </p>
+      ) : (
+        <Tabs
+          activeKey={activeTab}
+          onSelect={setActiveTab}
+          id="years-tabs"
+          className="mb-3"
+        >
           {years.map((year) => (
-            <Tab eventKey={year} title={year}>
+            <Tab eventKey={year} title={year} key={year}>
               <YearlyComment year={year} />
-              <SongTable year={year} />
+              <SongsTable year={year} />
             </Tab>
           ))}
         </Tabs>
-      </>
-    );
-  }
-
-  render() {
-    let contents = this.state.loading ? (
-      <p>
-        <em>Loading...</em>
-      </p>
-    ) : (
-      FetchData.renderSongsTabs(this.state.years)
-    );
-
-    return (
-      <>
-        <h1 id="favoriteSongs">13 Favorite Songs of the Year</h1>
-        {contents}
-      </>
-    );
-  }
-
-  async getYears() {
-    const response = await fetch("api/music/favorite-songs/years");
-    const years = await response.json();
-    this.setState({ years: years, loading: false });
-  }
+      )}
+    </>
+  );
 }

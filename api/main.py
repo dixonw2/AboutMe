@@ -156,6 +156,3 @@ async def get_random_cards(db: db_dependency, count: Optional[int] = 20, weighte
 #endregion
 
 app.include_router(router, prefix="/api")
-
-#TODO: Remove extra "Loading" from subcomponents like YearlyComment, etc. Only have loading in FetchData so it's not repeated
-#TODO: Make songs order by artist ignoring article adjective

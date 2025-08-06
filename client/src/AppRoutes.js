@@ -1,7 +1,7 @@
 import { Counter } from "./components/Counter";
-import { FavoriteSongs } from "./components/music/favoritesongs/FavoriteSongs";
 import { Home } from "./components/Home";
-import ReactBootstrapTabs from "./components/ReactBootstrapTabs";
+import FavoriteSongs from "./components/music/favoritesongs/FavoriteSongs";
+import { TripleTriad } from "./components/tripletriad/TripleTriad";
 
 const AppRoutes = [
   {
@@ -13,12 +13,12 @@ const AppRoutes = [
     element: <Counter />,
   },
   {
-    path: "/fetch-data",
-    element: <FetchData />,
+    path: "/triple-triad",
+    element: <TripleTriad />,
   },
   {
-    path: "/test",
-    element: <ReactBootstrapTabs />,
+    path: "/music/favorites",
+    element: <FavoriteSongs />,
   },
 ];
 
