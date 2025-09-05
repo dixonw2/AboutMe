@@ -1,0 +1,14 @@
+fastapi
+uvicorn[standard]
+sqlalchemy>=2.0
+alembic
+pydantic>=2.0
+pyodbc
+python-dotenv      # if you want to load DB creds from .env
+passlib[bcrypt]    # auth
+python-jose[cryptography]  # JWT tokens
+httpx              # API testing
+pytest
+ruff
+black
+mypy
