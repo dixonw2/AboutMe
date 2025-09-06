@@ -1,10 +1,13 @@
 from database import Base
 from sqlalchemy import Column, String, Integer
 
-class TripleTriadsCards(Base):
+
+class TripleTriadCards(Base):
     __tablename__ = "TripleTriadCards"
-    
-    card_name = Column("CardName", String(128), index=True, nullable=False, primary_key=True)
+
+    card_name = Column(
+        "CardName", String(128), index=True, nullable=False, primary_key=True
+    )
     left = Column("Left", Integer, index=True, nullable=False)
     up = Column("Up", Integer, index=True, nullable=False)
     right = Column("Right", Integer, index=True, nullable=False)

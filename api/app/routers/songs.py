@@ -22,7 +22,18 @@ async def get_songs(
         example=2021,
     ),
 ):
+
+    def strip_articles(artist: str) -> str:
+        articles = ["the ", "a ", "an "]
+        for article in articles:
+            if artist.lower().startswith(article):
+                return artist[len(article) :]
+        return artist
+
     query = select(Songs)
     if year is not None:
         query = query.where(Songs.year == year)
-    return db.execute(query).scalars().all()
+    songs = db.scalars(query).all()
+    songs = sorted(songs, key=lambda song: strip_articles(song.artist))
+
+    return songs
