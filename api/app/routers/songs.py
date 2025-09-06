@@ -7,6 +7,8 @@ from schemas.song import SongSchema
 from models.songs import Songs
 from database import get_db
 
+from datetime import datetime
+
 
 router = APIRouter(prefix="/songs", tags=["songs"])
 
@@ -17,12 +19,22 @@ async def get_songs(
     year: int = Query(
         None,
         ge=2017,
-        le=2030,
+        le=datetime.now().year - 1,  # songs only available for past years since 2017
         description="Get songs from a specific year",
-        example=2021,
     ),
 ):
+
+    def strip_articles(artist: str) -> str:
+        articles = ["the ", "a ", "an "]
+        for article in articles:
+            if artist.lower().startswith(article):
+                return artist[len(article) :]
+        return artist
+
     query = select(Songs)
     if year is not None:
         query = query.where(Songs.year == year)
-    return db.execute(query).scalars().all()
+    songs = db.scalars(query).all()
+    songs = sorted(songs, key=lambda song: strip_articles(song.artist))
+
+    return songs
