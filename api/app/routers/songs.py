@@ -1,0 +1,28 @@
+from fastapi import APIRouter, Depends, Query
+from sqlalchemy import select
+from sqlalchemy.orm import Session
+from typing import List
+
+from schemas.song import SongSchema
+from models.songs import Songs
+from database import get_db
+
+
+router = APIRouter(prefix="/songs", tags=["songs"])
+
+
+@router.get("/", response_model=List[SongSchema], description="Get songs")
+async def get_songs(
+    db: Session = Depends(get_db),
+    year: int = Query(
+        None,
+        ge=2017,
+        le=2030,
+        description="Get songs from a specific year",
+        example=2021,
+    ),
+):
+    query = select(Songs)
+    if year is not None:
+        query = query.where(Songs.year == year)
+    return db.execute(query).scalars().all()
