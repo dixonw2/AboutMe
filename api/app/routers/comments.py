@@ -7,6 +7,8 @@ from database import get_db
 from schemas.years_comment import YearsCommentSchema
 from models.years_comments import YearsComments
 
+from datetime import datetime
+
 router = APIRouter(prefix="/comments", tags=["comments"])
 
 
@@ -18,13 +20,11 @@ async def get_comments(
     year: int = Query(
         None,
         ge=2017,
-        le=2030,
+        le=datetime.now().year - 1,  # comments only available for past years since 2017
         description="Get comments for a specific year",
-        example=2021,
     ),
 ):
     query = select(YearsComments)
     if year is not None:
         query = query.where(YearsComments.year == year)
-    return db.execute(query).scalars().all()
-
+    return db.scalars(query).all()
