@@ -1,5 +1,13 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Depends
 from fastapi.middleware.cors import CORSMiddleware
+from typing import Annotated, List, Optional
+from pydantic import BaseModel
+from sqlalchemy import text
+from database import SessionLocal, engine, Base, get_db
+import models
+from sqlalchemy.orm import Session
+import schemas
+import routers
 
 app = FastAPI()
 
@@ -13,6 +21,8 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-@app.get("/api/hello")
-def read_root():
-    return {"Hello": "World"}
+Base.metadata.create_all(bind=engine)
+
+app.include_router(routers.songs_router, prefix="/api")
+app.include_router(routers.comments_router, prefix="/api")
+app.include_router(routers.triple_triad_router, prefix="/api")
