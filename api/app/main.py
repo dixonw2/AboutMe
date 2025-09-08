@@ -1,12 +1,6 @@
-from fastapi import FastAPI, Depends
+from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from typing import Annotated, List, Optional
-from pydantic import BaseModel
-from sqlalchemy import text
-from database import SessionLocal, engine, Base, get_db
-import models
-from sqlalchemy.orm import Session
-import schemas
+from database import engine, Base
 import routers
 
 app = FastAPI()
