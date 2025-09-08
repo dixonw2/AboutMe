@@ -21,7 +21,7 @@ async def get_comments(
         None,
         ge=2017,
         le=datetime.now().year - 1,  # comments only available for past years since 2017
-        description="Get comments for a specific year",
+        description="Get the comment for a specific year",
     ),
 ):
     query = select(YearsComments)

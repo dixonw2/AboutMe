@@ -54,26 +54,28 @@ async def get_random_cards(
 ):
     cards = db.scalars(select(TripleTriadCards)).all()
 
-    random_cards = get_random_cards(db, cards, count, weighted)
+    random_cards = get_random_cards(cards, count, weighted)
     random_cards.sort(key=lambda card: (card.level, card.card_name))
     return random_cards
 
 
 @router.get(
-    "/cards/hand",
+    "/cards/random/hand",
     response_model=List[TripleTriadCardSchema],
     description="Get a random hand of 5 Triple Triad cards",
 )
 async def get_triple_triad_hand(
     db: Session = Depends(get_db),
-    sample: int = Query(20, ge=5, le=110, description="Number of cards to sample from"),
+    sample: int = Query(
+        20, ge=5, le=110, description="Number of random cards to sample from"
+    ),
     weighted: bool = Query(
         True, description="Whether to weigh the random selection by card rarity"
     ),
 ):
     cards = db.scalars(select(TripleTriadCards)).all()
 
-    hand = get_random_cards(db, cards, sample, weighted)
+    hand = get_random_cards(cards, sample, weighted)
     hand.sort(key=lambda card: (card.level, card.card_name))
     return hand[-5:]
 
@@ -81,7 +83,7 @@ async def get_triple_triad_hand(
 # endregion
 # region Helper Functions
 def get_random_cards(
-    db: Session, cards: List[TripleTriadCards], count: int, weighted: bool
+    cards: List[TripleTriadCards], count: int, weighted: bool
 ) -> List[TripleTriadCards]:
 
     if count > len(cards):
