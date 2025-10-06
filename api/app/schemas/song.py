@@ -1,8 +1,8 @@
-from pydantic import BaseModel
+from models.about_me_model import AboutMeModel
 import datetime
 
 
-class SongSchema(BaseModel):
+class SongSchema(AboutMeModel):
     song_name: str = None
     artist: str = None
     album: str = None
@@ -11,6 +11,3 @@ class SongSchema(BaseModel):
     apple_music_link: str = None
     spotify_link: str = None
     year: int = None
-
-    class Config:
-        orm_mode = True

@@ -10,7 +10,7 @@ from database import get_db
 from datetime import datetime
 
 
-router = APIRouter(prefix="/songs", tags=["songs"])
+router = APIRouter(prefix="/music/favorite-songs/songs", tags=["songs"])
 
 
 @router.get("/", response_model=List[SongSchema], description="Get songs")

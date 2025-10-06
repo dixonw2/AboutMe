@@ -1,9 +1,6 @@
-from pydantic import BaseModel
+from models.about_me_model import AboutMeModel
 
 
-class YearsCommentSchema(BaseModel):
+class YearsCommentSchema(AboutMeModel):
     year: int = None
     comment: str = None
-
-    class Config:
-        orm_mode = True
