@@ -9,7 +9,7 @@ from models.years_comments import YearsComments
 
 from datetime import datetime
 
-router = APIRouter(prefix="/comments", tags=["comments"])
+router = APIRouter(prefix="/music/favorite-songs/comments", tags=["comments"])
 
 
 @router.get(
