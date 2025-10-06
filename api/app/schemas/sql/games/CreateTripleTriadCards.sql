@@ -1,0 +1,151 @@
+IF NOT EXISTS (SELECT * FROM sys.tables WHERE [name] = 'TripleTriadCards' AND schema_id = SCHEMA_ID('Games'))
+BEGIN
+	CREATE TABLE Games.TripleTriadCards (
+		id INT IDENTITY(1,1) PRIMARY KEY,
+		CardName NVARCHAR(64) UNIQUE NOT NULL,
+		[Left] INT NOT NULL,
+		Up INT NOT NULL,
+		[Right] INT NOT NULL,
+		Down INT NOT NULL,
+		Element NVARCHAR(32) NULL,
+		[Level] INT NOT NULL
+	);
+END
+
+CREATE TABLE #TempTripleTriadCards (
+	CardName NVARCHAR(64) UNIQUE NOT NULL,
+	[Left] INT NOT NULL,
+	[Up] INT NOT NULL,
+	[Right] INT NOT NULL,
+	[Down] INT NOT NULL,
+	Element NVARCHAR(32) NULL,
+	[Level] INT NOT NULL
+);
+
+INSERT INTO #TempTripleTriadCards (CardName, [Left], [Up], [Right], [Down], Element, [Level])
+VALUES
+	('Geezard', 5, 1, 4, 1, NULL, 1),
+	('Funguar', 3, 5, 1, 1, NULL, 1),
+	('Bite Bug', 5, 1, 3, 3, NULL, 1),
+	('Red Bat', 2, 6, 1, 1, NULL, 1),
+	('Blobra', 5, 2, 3, 1, NULL, 1),
+	('Gayla', 4, 2, 1, 4, NULL, 1),
+	('Gesper', 1, 1, 5, 4, NULL, 1),
+	('Fastitocalon-F', 1, 3, 5, 2, 'Earth', 1),
+	('Blood Soul', 1, 2, 1, 6, NULL, 1),
+	('Caterchipillar', 3, 4, 2, 4, NULL, 1),
+	('Cockatrice', 6, 2, 1, 2, 'Lightning', 1),
+
+	('Grat', 1, 7, 1, 3, NULL, 2),
+	('Buel', 3, 6, 2, 2, NULL, 2),
+	('Mesmerize', 4, 5, 3, 3, NULL, 2),
+	('Glacial Eye', 3, 6, 1, 4, 'Ice', 2),
+	('Belhelmel', 3, 3, 4, 5, NULL, 2),
+	('Thrustaevis', 5, 5, 3, 2, 'Wind', 2),
+	('Anacondaur', 5, 5, 1, 3, 'Poison', 2),
+	('Creeps', 2, 5, 2, 5, 'Lightning', 2),
+	('Grendel', 2, 4, 4, 5, 'Lightning', 2),
+	('Jelleye', 7, 3, 2, 1, NULL, 2),
+	('Grand Mantis', 3, 5, 2, 5, NULL, 2),
+
+	('Forbidden', 2, 6, 6, 3, NULL, 3),
+	('Armadodo', 6, 6, 3, 1, 'Earth', 3),
+	('Tri-Face', 5, 3, 5, 5, 'Poison', 3),
+	('Fastitocalon', 3, 7, 5, 1, 'Earth', 3),
+	('Snow Lion', 3, 7, 1, 5, 'Ice', 3),
+	('Ochu', 3, 5, 6, 3, NULL, 3),
+	('SAM08G', 4, 5, 6, 2, 'Fire', 3),
+	('Death Claw', 2, 4, 4, 7, 'Fire', 3),
+	('Cactuar', 3, 6, 2, 6, NULL, 3),
+	('Tonberry', 4, 2, 6, 4, NULL, 3),
+	('Abyss Worm', 5, 7, 2, 3, 'Earth', 3),
+	
+	('Turtapod', 7, 2, 3, 6, NULL, 4),
+	('Vysage', 5, 6, 5, 4, NULL, 4),
+	('T-Rexaur', 7, 4, 6, 2, NULL, 4),
+	('Bomb', 3, 2, 7, 6, 'Fire', 4),
+	('Blitz', 7, 1, 6, 4, 'Lightning', 4),
+	('Wendigo', 6, 7, 3, 1, NULL, 4),
+	('Torama', 4, 7, 4, 4, NULL, 4),
+	('Imp', 6, 3, 7, 3, NULL, 4),
+	('Blue Dragon', 3, 6, 2, 7, 'Poison', 4),
+	('Adamantoise', 6, 4, 5, 5, 'Earth', 4),
+	('Hexadragon', 3, 7, 5, 4, 'Fire', 4),
+
+	('Iron Giant', 5, 6, 5, 6, NULL, 5),
+	('Behemoth', 7, 3, 6, 5, NULL, 5),
+	('Chimera', 3, 7, 6, 5, 'Water', 5),
+	('PuPu', 1, 3, 10, 2, NULL, 5),
+	('Elastoid', 7, 6, 2, 6, NULL, 5),
+	('GIM47N', 4, 5, 5, 7, NULL, 5),
+	('Malboro', 2, 7, 7, 4, 'Poison', 5),
+	('Ruby Dragon', 4, 7, 2, 7, 'Fire', 5),
+	('Elnoyle', 6, 5, 3, 7, NULL, 5),
+	('Tonberry King', 4, 4, 6, 7, NULL, 5),
+	('Wedge, Biggs', 7, 6, 6, 2, NULL, 5),
+
+	('Fujin, Raijin', 4, 2, 8, 8, NULL, 6),
+	('Elvoret', 4, 7, 8, 3, 'Wind', 6),
+	('X-ATM092', 3, 4, 8, 7, NULL, 6),
+	('Granaldo', 5, 7, 2, 8, NULL, 6),
+	('Gerogero', 3, 1, 8, 8, 'Poison', 6),
+	('Iguion', 2, 8, 2, 8, NULL, 6),
+	('Abadon', 5, 6, 8, 4, NULL, 6),
+	('Trauma', 6, 4, 8, 5, NULL, 6),
+	('Oilboyle', 8, 1, 8, 4, NULL, 6),
+	('Shumi Tribe', 4, 6, 5, 8, NULL, 6),
+	('Krysta', 1, 7, 5, 8, NULL, 6),
+
+	('Propagator', 8, 8, 4, 4, NULL, 7),
+	('Jumbo Cactuar', 4, 8, 8, 4, NULL, 7),
+	('Tri-Point', 8, 8, 5, 2, 'Lightning', 7),
+	('Gargantua', 8, 5, 6, 6, NULL, 7),
+	('Mobile Type 8', 3, 8, 6, 7, NULL, 7),
+	('Sphinxara', 8, 8, 3, 5, NULL, 7),
+	('Tiamat', 4, 8, 8, 5, NULL, 7),
+	('BGH251F2', 5, 5, 7, 8, NULL, 7),
+	('Red Giant', 7, 6, 8, 4, NULL, 7),
+	('Catoblepas', 7, 1, 8, 7, NULL, 7),
+	('Ultima Weapon', 8, 7, 7, 2, NULL, 7),
+
+	('Chubby Chocobo', 9, 4, 4, 8, NULL, 8),
+	('Angelo', 3, 9, 6, 7, NULL, 8),
+	('Gilgamesh', 6, 3, 7, 9, NULL, 8),
+	('MiniMog', 2, 9, 3, 9, NULL, 8),
+	('Chicobo', 4, 9, 4, 8, NULL, 8),
+	('Quezacotl', 4, 2, 9, 9, 'Lightning', 8),
+	('Shiva', 9, 6, 7, 4, 'Ice', 8),
+	('Ifrit', 8, 9, 6, 2, 'Fire', 8),
+	('Siren', 2, 8, 9, 6, NULL, 8),
+	('Sacred', 9, 5, 1, 9, 'Earth', 8),
+	('Minotaur', 9, 9, 5, 2, 'Earth', 8),
+
+	('Carbuncle', 4, 8, 4, 10, NULL, 9),
+	('Diablos', 3, 5, 10, 8, NULL, 9),
+	('Leviathan', 7, 7, 10, 1, 'Water', 9),
+	('Odin', 5, 8, 10, 3, NULL, 9),
+	('Pandemona', 7, 10, 1, 7, 'Wind', 9),
+	('Cerberus', 10, 7, 4, 6, NULL, 9),
+	('Alexander', 2, 9, 10, 4, 'Holy', 9),
+	('Phoenix', 10, 7, 2, 7, 'Fire', 9),
+	('Bahamut', 6, 10, 8, 2, NULL, 9),
+	('Doomtrain', 10, 3, 1, 10, 'Poison', 9),
+	('Eden', 10, 4, 4, 9, NULL, 9),
+
+	('Ward', 8, 10, 7, 2, NULL, 10),
+	('Kiros', 10, 6, 7, 6, NULL, 10),
+	('Laguna', 9, 5, 10, 3, NULL, 10),
+	('Selphie', 4, 10, 8, 6, NULL, 10),
+	('Quistis', 2, 9, 6, 10, NULL, 10),
+	('Irvine', 10, 2, 6, 9, NULL, 10),
+	('Zell', 6, 8, 5, 10, NULL, 10),
+	('Rinoa', 10, 4, 10, 2, NULL, 10),
+	('Edea', 3, 10, 10, 3, NULL, 10),
+	('Seifer', 4, 6, 9, 10, NULL, 10),
+	('Squall', 9, 10, 4, 6, NULL, 10);
+
+INSERT INTO Games.TripleTriadCards (CardName, [Left], Up, [Right], Down, Element, [Level])
+SELECT tttc.CardName, tttc.[Left], tttc.Up, tttc.[Right], tttc.Down, tttc.Element, tttc.[Level]
+FROM #TempTripleTriadCards tttc
+LEFT JOIN Games.TripleTriadCards ttc ON ttc.CardName = tttc.CardName
+WHERE ttc.id IS NULL;

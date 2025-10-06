@@ -5,8 +5,8 @@ from sqlalchemy.orm import Session
 from sqlalchemy import func, select
 from database import get_db
 
-from schemas.triple_triad_card import TripleTriadCardSchema
-from models.triple_triad_cards import TripleTriadCards
+from schemas.triple_triad_card import TripleTriadCardRead
+from models.triple_triad_card import TripleTriadCard
 
 router = APIRouter(prefix="/triple-triad", tags=["triple-triad"])
 
@@ -14,7 +14,7 @@ router = APIRouter(prefix="/triple-triad", tags=["triple-triad"])
 # region Endpoints
 @router.get(
     "/cards",
-    response_model=List[TripleTriadCardSchema],
+    response_model=List[TripleTriadCardRead],
     description="Get Triple Triad cards",
 )
 async def get_triple_triad_cards(
@@ -27,20 +27,20 @@ async def get_triple_triad_cards(
     ),
     element: str = Query(None, description="Get cards of a specific element"),
 ):
-    query = select(TripleTriadCards)
+    query = select(TripleTriadCard)
     if level is not None:
-        query = query.where(TripleTriadCards.level == level)
+        query = query.where(TripleTriadCard.level == level)
     if element is not None:
         if element == "none":
-            query = query.where(TripleTriadCards.element.is_(None))
+            query = query.where(TripleTriadCard.element.is_(None))
         else:
-            query = query.where(TripleTriadCards.element == element)
+            query = query.where(TripleTriadCard.element == element)
     return db.execute(query).scalars().all()
 
 
 @router.get(
     "/cards/random",
-    response_model=List[TripleTriadCardSchema],
+    response_model=List[TripleTriadCardRead],
     description="Get a random list of Triple Triad cards",
 )
 async def get_random_cards(
@@ -52,7 +52,7 @@ async def get_random_cards(
         True, description="Whether to weigh the random selection by card rarity"
     ),
 ):
-    cards = db.scalars(select(TripleTriadCards)).all()
+    cards = db.scalars(select(TripleTriadCard)).all()
 
     random_cards = get_random_cards(cards, count, weighted)
     random_cards.sort(key=lambda card: (card.level, card.card_name))
@@ -61,7 +61,7 @@ async def get_random_cards(
 
 @router.get(
     "/cards/random/hand",
-    response_model=List[TripleTriadCardSchema],
+    response_model=List[TripleTriadCardRead],
     description="Get a random hand of 5 Triple Triad cards",
 )
 async def get_triple_triad_hand(
@@ -73,7 +73,7 @@ async def get_triple_triad_hand(
         True, description="Whether to weigh the random selection by card rarity"
     ),
 ):
-    cards = db.scalars(select(TripleTriadCards)).all()
+    cards = db.scalars(select(TripleTriadCard)).all()
 
     hand = get_random_cards(cards, sample, weighted)
     hand.sort(key=lambda card: (card.level, card.card_name))
@@ -83,14 +83,14 @@ async def get_triple_triad_hand(
 # endregion
 # region Helper Functions
 def get_random_cards(
-    cards: List[TripleTriadCards], count: int, weighted: bool
-) -> List[TripleTriadCards]:
+    cards: List[TripleTriadCard], count: int, weighted: bool
+) -> List[TripleTriadCard]:
 
     if count > len(cards):
         count = len(cards)
 
     # Weighted selection helper
-    def get_weight(card: TripleTriadCards) -> float:
+    def get_weight(card: TripleTriadCard) -> float:
         level = card.level
         if level in [1, 2]:
             return 4
@@ -127,3 +127,8 @@ def get_random_cards(
 
 
 # endregion
+
+
+# Should all logic be in here for even the "wave" kind of thing I just thought of where you start with bad cards and get better ones as you win?
+# Can steal ante cards so you start with a tier 8 or something and so does the opponent (or maybe a level lower?)
+# Tbh just adding this to remind myself of this idea

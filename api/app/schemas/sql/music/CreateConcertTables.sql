@@ -1,27 +1,6 @@
--- Drop permanent tables
-IF OBJECT_ID('dbo.ArtistsEvents', 'U') IS NOT NULL
-	DROP TABLE dbo.ArtistsEvents;
-
-IF OBJECT_ID('dbo.Artists', 'U') IS NOT NULL
-    DROP TABLE dbo.Artists;
-
-IF OBJECT_ID('dbo.Events', 'U') IS NOT NULL
-    DROP TABLE dbo.Events;
-
--- Drop temp tables
-IF OBJECT_ID('tempdb..#TempArtists', 'U') IS NOT NULL
-    DROP TABLE #TempArtists;
-
-IF OBJECT_ID('tempdb..#TempEvents', 'U') IS NOT NULL
-    DROP TABLE #TempEvents;
-
-IF OBJECT_ID('tempdb..#TempArtistsEvents', 'U') IS NOT NULL
-	DROP TABLE #TempArtistsEvents;
-
-
-IF NOT EXISTS (SELECT * FROM sys.tables WHERE [Name] = 'Events')
+IF NOT EXISTS (SELECT * FROM sys.tables WHERE [name] = 'Events' AND [schema_id] = SCHEMA_ID('Music'))
 BEGIN
-	CREATE TABLE Events (
+	CREATE TABLE Music.[Events] (
 		Id INT IDENTITY(1,1) PRIMARY KEY,
 		EventName NVARCHAR(64),
 		Headliner NVARCHAR(64),
@@ -116,15 +95,15 @@ VALUES
 	('BABYMETAL World Tour', 'BABYMETAL', '2024-11-23', 'Andrew J. Brady ICON Music Center'),
 	('Louder Than Life', NULL, '2025-09-19', 'Highland Festival Grounds at the Kentucky Expo Center');
 
-INSERT INTO Events (EventName, Headliner, [Date], Venue)
+INSERT INTO Music.[Events] (EventName, Headliner, [Date], Venue)
 SELECT te.EventName, te.Headliner, te.[Date], te.Venue
 FROM #TempEvents te
-LEFT JOIN Events e ON e.EventName = te.EventName AND e.Headliner = te.Headliner AND e.[Date] = te.[Date] AND e.Venue = te.Venue
+LEFT JOIN Music.[Events] e ON e.EventName = te.EventName AND e.Headliner = te.Headliner AND e.[Date] = te.[Date] AND e.Venue = te.Venue
 WHERE e.Id IS NULL;
 	
-IF NOT EXISTS (SELECT * FROM sys.tables WHERE [Name] = 'Artists')
+IF NOT EXISTS (SELECT * FROM sys.tables WHERE [name] = 'Artists' AND [schema_id] = SCHEMA_ID('Music'))
 BEGIN
-	CREATE TABLE Artists (
+	CREATE TABLE Music.Artists (
 		Id INT IDENTITY(1,1) PRIMARY KEY,
 		Artist NVARCHAR(64) NOT NULL
 	);
@@ -552,29 +531,29 @@ VALUES
 	('Sleep Token', '2025-09-19', 8),
 	('Avenged Sevenfold', '2025-09-19', 9);
 
-INSERT INTO Artists (Artist)
+INSERT INTO Music.Artists (Artist)
 SELECT DISTINCT ta.Artist
 FROM #TempArtists ta
-LEFT JOIN Artists a ON a.Artist = ta.Artist
+LEFT JOIN Music.Artists a ON a.Artist = ta.Artist
 WHERE a.Id IS NULL;
 
 IF NOT EXISTS (SELECT * FROM sys.tables WHERE [Name] = 'ArtistsEvents')
 BEGIN
-	CREATE TABLE ArtistsEvents (
+	CREATE TABLE Music.ArtistsEvents (
 		IdArtist INT NOT NULL,
 		IdEvent INT NOT NULL,
 		SetOrder INT NOT NULL,
 		PRIMARY KEY (IdArtist, IdEvent),
-		CONSTRAINT FK_Artist FOREIGN KEY (IdArtist) REFERENCES Artists(Id),
-		CONSTRAINT FK_Event FOREIGN KEY (IdEvent) REFERENCES Events(Id)
+		CONSTRAINT FK_Artist FOREIGN KEY (IdArtist) REFERENCES Music.Artists(Id),
+		CONSTRAINT FK_Event FOREIGN KEY (IdEvent) REFERENCES Music.Events(Id)
 	);
 END
 
-INSERT INTO ArtistsEvents (IdArtist, IdEvent, SetOrder)
+INSERT INTO Music.ArtistsEvents (IdArtist, IdEvent, SetOrder)
 SELECT a.Id, e.Id, ta.SetOrder
 FROM #TempArtists ta
-JOIN Artists a ON a.Artist = ta.Artist
+JOIN Music.Artists a ON a.Artist = ta.Artist
 JOIN #TempEvents te ON te.[Date] = ta.[Date]
-JOIN Events e ON e.[Date] = te.[Date] AND e.Venue = te.Venue
-LEFT JOIN ArtistsEvents ae ON ae.IdArtist = a.Id AND ae.IdEvent  = e.Id
+JOIN Music.[Events] e ON e.[Date] = te.[Date] AND e.Venue = te.Venue
+LEFT JOIN Music.ArtistsEvents ae ON ae.IdArtist = a.Id AND ae.IdEvent  = e.Id
 WHERE ae.IdArtist IS NULL;

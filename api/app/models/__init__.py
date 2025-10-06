@@ -1,3 +1,3 @@
-from .songs import Songs
-from .years_comments import YearsComments
-from .triple_triad_cards import TripleTriadCards
+from .music.favorite_songs_of_year.song import Song
+from .music.favorite_songs_of_year.comment import Comment
+from .triple_triad_card import TripleTriadCard
