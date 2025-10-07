@@ -1,12 +1,8 @@
-from models import AboutMeModel
+from schemas import AboutMeModel
 from typing import List
 
 from .artist import ArtistRead
 from .event import EventRead
-
-
-class ArtistBase(AboutMeModel):
-    artist: str
 
 
 class ArtistAtEventRead(ArtistRead):
@@ -19,10 +15,6 @@ class EventWithArtistsRead(EventRead):
 
 class ArtistsEventsBase(AboutMeModel):
     set_order: int
-
-
-class ArtistsEventsCreate(ArtistsEventsBase):
-    pass
 
 
 class ArtistsEventsRead(ArtistsEventsBase):

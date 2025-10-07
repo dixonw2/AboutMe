@@ -3,8 +3,8 @@ from sqlalchemy import select
 from sqlalchemy.orm import Session
 from typing import List
 
-from schemas.music.favorite_songs.comment import CommentRead
-from models.music.favorite_songs_of_year.comment import Comment
+from schemas.music import CommentRead
+from models.music import Comment
 from database import get_db
 
 router = APIRouter(prefix="/music/favorite-songs/comments", tags=["comments"])

@@ -1,4 +1,4 @@
-from models.about_me_model import AboutMeModel
+from schemas import AboutMeModel
 
 
 class TripleTriadCardBase(AboutMeModel):

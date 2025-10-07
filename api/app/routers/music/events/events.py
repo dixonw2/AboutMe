@@ -3,14 +3,14 @@ from sqlalchemy import select
 from sqlalchemy.orm import Session, joinedload, selectinload
 from typing import List
 
-from schemas.music import ArtistAtEventRead, ArtistsEventsRead
+from schemas.music import ArtistAtEventRead
 from schemas.music import EventWithArtistsRead
 from schemas.music import ArtistRead
 from schemas.music import EventRead
 
-from models.music.events.artist import Artist
-from models.music.events.artists_events import ArtistsEvents
-from models.music.events.event import Event
+from models.music import Artist
+from models.music import ArtistsEvents
+from models.music import Event
 from database import get_db
 
 router = APIRouter(prefix="/music/events", tags=["events"])
