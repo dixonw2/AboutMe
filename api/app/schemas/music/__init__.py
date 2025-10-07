@@ -5,6 +5,8 @@ from .events.artists_events import (
     ArtistAtEventRead,
     ArtistsEventsRead,
     EventWithArtistsRead,
+    ArtistWithEventsRead,
+    EventForArtistRead,
 )
 from .events.artist import ArtistRead
 from .events.event import EventRead
