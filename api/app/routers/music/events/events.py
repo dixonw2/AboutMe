@@ -19,7 +19,8 @@ router = APIRouter(prefix="/music/events", tags=["events"])
 @router.get(
     "/all-artists-and-events",
     response_model=List[EventWithArtistsRead],
-    description="Get events with artists in order",
+    description="Get events with artists in set order",
+    summary="Get Events and Artists",
 )
 async def get_events(db: Session = Depends(get_db)):
     stmt = select(Event).options(
@@ -42,17 +43,13 @@ async def get_events(db: Session = Depends(get_db)):
     return result
 
 
-@router.get(
-    "/artists", response_model=List[ArtistRead], description="Get artists with events"
-)
+@router.get("/artists", response_model=List[ArtistRead], description="Get all artists", summary="Get Artists")
 async def get_artists_with_events(db: Session = Depends(get_db)):
     artists_events = db.scalars(select(Artist)).all()
     return artists_events
 
 
-@router.get(
-    "/events", response_model=List[EventRead], description="Get events"
-)
+@router.get("/events", response_model=List[EventRead], description="Get all events", summary="Get Events")
 async def get_events_with_artists(db: Session = Depends(get_db)):
     events = db.scalars(select(Event)).all()
     return events
