@@ -13,4 +13,4 @@ class Event(Base):
     date = Column("Date", Date, nullable=False)
     venue = Column("Venue", String(64), nullable=False)
 
-    artists = relationship("ArtistsEvents", back_populates="event")
+    artists_events = relationship("ArtistsEvents", back_populates="event")

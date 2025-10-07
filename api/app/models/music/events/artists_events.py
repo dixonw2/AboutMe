@@ -15,5 +15,5 @@ class ArtistsEvents(Base):
     )
     set_order = Column("SetOrder", Integer, nullable=False)
 
-    artist = relationship("Artist", back_populates="events")
-    event = relationship("Event", back_populates="artists")
+    artist = relationship("Artist", back_populates="artists_events")
+    event = relationship("Event", back_populates="artists_events")

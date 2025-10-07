@@ -1,6 +1,5 @@
 from models.about_me_model import AboutMeModel
 from typing import List
-from .artists_events import ArtistsEventsRead
 
 
 class ArtistBase(AboutMeModel):
@@ -13,4 +12,3 @@ class ArtistCreate(ArtistBase):
 
 class ArtistRead(ArtistBase):
     id: int
-    events: List[ArtistsEventsRead] = []

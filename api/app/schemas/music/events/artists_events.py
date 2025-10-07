@@ -1,9 +1,23 @@
-from models.about_me_model import AboutMeModel
+from models import AboutMeModel
+from typing import List
+
+from .artist import ArtistRead
+from .event import EventRead
+
+
+class ArtistBase(AboutMeModel):
+    artist: str
+
+
+class ArtistAtEventRead(ArtistRead):
+    set_order: int
+
+
+class EventWithArtistsRead(EventRead):
+    artists: List[ArtistAtEventRead] = []
 
 
 class ArtistsEventsBase(AboutMeModel):
-    artist_id: int
-    event_id: int
     set_order: int
 
 
@@ -12,4 +26,5 @@ class ArtistsEventsCreate(ArtistsEventsBase):
 
 
 class ArtistsEventsRead(ArtistsEventsBase):
-    pass
+    artist: ArtistRead | None = None
+    event: EventRead | None = None
