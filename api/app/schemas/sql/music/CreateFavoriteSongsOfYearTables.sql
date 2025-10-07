@@ -1,6 +1,43 @@
-IF NOT EXISTS (SELECT * FROM sys.tables WHERE [Name] = 'Songs')
+------- Create initial comments -------
+IF NOT EXISTS (SELECT * FROM sys.tables WHERE [name] = 'FavoriteSongsOfYearComments' AND schema_id = SCHEMA_ID('Music'))
 BEGIN
-    CREATE TABLE Songs (
+    CREATE TABLE Music.FavoriteSongsOfYearComments (
+        [Year] INT PRIMARY KEY,
+        Comment NVARCHAR(MAX) NOT NULL,
+		DateCreated DATETIME2 NOT NULL DEFAULT SYSUTCDATETIME(),
+		DateLastUpdated DATETIME2,
+    );
+END
+
+CREATE TABLE #TempYearsComments (
+	[Year] INT UNIQUE,
+	Comment NVARCHAR(MAX) NOT NULL
+);
+
+INSERT INTO #TempYearsComments ([Year], Comment)
+VALUES
+	(2017, N'2017 was the first year I made this list, and was before I made the rule of only one song per artist.  Looking back on it, I most definitely would switch out about half the songs with other ones released that year.  I find this to be the case with every year, however.  Sometimes it''s because my taste in music evolves, but it mostly seems to be because I start listening to a song the year after it''s released, especially if it was late in the year.  This is the year where it''s the former rather than the latter, however.' + CHAR(10) + CHAR(10) + 'Out of my existing list, though, the three that I''ve kept listening to consistently since are Bear Claws, How Do You Feel?, and Less Than.'),
+	(2018, N'After not liking that my 2017 list contained a couple songs from the same artist, I decided to impose the rule of no more than one song per artist.  An artist/band being featured on another artist/band''s song is okay, but it explicitly cannot be their song.  This made it more interesting for me since not only did I have to narrow down to a single song off of an album, I had to listen to songs and albums by other artists I may not have listened to before.' + CHAR(10) + CHAR(10) + 'As far as songs I would switch out with other ones released in 2018, I would probably switch out only a couple at most.  I really enjoyed most of the music I listened to that year and haven''t discovered more than a couple songs released in 2018 since that I would replace the others with.' + CHAR(10) + CHAR(10) + 'Out of my existing list, the three I''ve continued listening to the most is difficult to pin down, but most likely Starlight, What is Love?, and Voices in My Head.'),
+	(2019, N'This year actually was somewhat difficult to get enough songs for the list.  There were five albums that I primarily listened to because they were so good, meaning I didn''t listen to more artists I would have liked to because I had those albums almost exclusively on repeat at various times throughout the year.  If I did not create the rule of no more than one song per artist this list would have consisted of songs primarily by FEVER 333, BABYMETAL, TWICE, and The Maine.  I''m pretty sure the entire summer of 2019 I listened to almost exclusively FEVER 333, and October and November seemed as if BABYMETAL and TWICE had a reservation for my time.  I ultimately decided on enough songs to consist of a solid list, though.' + CHAR(10) + CHAR(10) + 'As with 2018, there''s one song, maybe two I would switch out with a song on this list, but overall I think the list was a pretty good one.' + CHAR(10) + CHAR(10) + 'Out of my existing list, the three I''ve continued listening to the most, without question, are Brand New Day, LOVE FOOLISH, and THE INNOCENT.'),
+	(2020, N'TWICE makes their third appearance, as does BABYMETAL (even if it is just a feature)!  If I had been more into TWICE in 2017, they would have made an appearance every year since I''ve started this.  Overall, I was somewhat pleased with the music released in 2020.  System of a Down, a favorite of mine, released their first music in over a decade.  Selena Gomez and DREAMCATCHER, a new find for me, had superb albums released at the beginning of the year (I vividly remember this because of COVID), so it was difficult picking one song from each album.  Besides those and the FEVER 333 song, though, I kind of struggled to really get a solid top 13.  John the Ghost is the singer for one of my favorite bands that has made many appearances already (The Maine), so that wasn''t very difficult, but otherwise there are a few songs I haven''t listened to much since.  I had hoped that quarantine would provide artists with some more time, but of course they may have easily just taken it as time off.  I had several concerts lined up for this year, and every single one got cancelled, so it would make sense.' + CHAR(10) + CHAR(10) + 'Out of this year, the three songs I''ve continued to listen to are A Sweeter Place, UP NO MORE, and PRESENCE IS STRENGTH.'),
+	(2021, N'This year was, like 2019, a bit difficult to compile.  Most of the songs are songs I listened to towards the beginning of the year.  TWICE again makes an appearance, and another K-Pop artist (IU) makes a first appearance.  I''ve listened to several of the artists on the list previously, so it was nice to hear their newer music and to say I''m still a fan.  The Hunna was a band I discovered at a show for Jimmy Eat World years ago, so I was happy to enjoy some of their newer music.  As for some of the others (The Blue Stones, ERRA, IU, and Teenage Wrist), I loved discovering their music this year and obsessively listening to it.  While I was down in Georgia for work, these artists accompanied me while I was sitting in a warehouse for 11 hours a day.' + CHAR(10) + CHAR(10) + 'For this year, the three songs that I''ve religiously listened to are Bad Place, Lilac, and Always The Same.  Lilac is a song I listened to over 40 times in a single day while I was in Georgia, for example!  I can''t say I''m proud of that detail.'),
+	(2022, N'This was once again another year that I found it difficult to find enough new music to fill the list.  ERRA and The Blue Stones make a return, and Electric Callboy was a fantastic discovery!  I was not surprised that TWICE made the list again.  When I first listened to Talk that Talk I wasn''t that impressed, but it quickly became one of my favorites of theirs.' + CHAR(10) + CHAR(10) + 'Despite the trouble I had with finding songs to add to the list, I listen to most of the songs on this list a lot to this day.  Now that I''ve given more music from the year a chance there are songs I would certainly swap out with others that are on the list, but overall I enjoyed it.  The three songs on this list that I listen to the most still today are Neon, Loved You a Little, and Talk that Talk.'),
+	(2023, N'Finally, for the first time since I started this list, Avenged Sevenfold released a new album (their first since 2016).  Avenged Sevenfold has been my all time favorite band since 2008, so I always celebrate new music from them.  In 2017 they began "evolving" their album from 2016 by adding covers, but I did''nt quite want to add them to the list.  Besides that, there are several new additions that I am happy to have learned about (notably Calva Louise and Make Them Suffer).  MISAMO was a bit of a sheepish addition, however, since they''re a subunit of TWICE.' + CHAR(10) + CHAR(10) + 'I still find myself listening to nearly every song on this list, and besides maybe one or two I can''t think of many other songs I would replace something on this list with.  Out of the songs on it, though, I''d say that the three songs I continue to listen to the most to this day are Cosmic, Ghost Of Me, and Essence.'),
+	(2024, N'Unlike a couple of the previous years, I found it difficult to actually trim this down to just 13. Unsurprisingly, TWICE has made it once again, and I''m sure this will be the case for 2025. I''m writing this retrospective a bit earlier than I have in previous years, so I only have maybe one or two songs that I''d replace in this list now.  Overall, however, I do like how diverse the music in this list seems to be, genre-wise; it''s a pretty solid representation of the music I listen to.  Little Big is a group my sister, friend, and I have been listening to since late 2019.  They''re a weird Russian rave group that makes some funny music and great music videos, and my sister, my friend, and I have gone to Chicago and Detroit to see them live now, and it was great both times.' + CHAR(10) + CHAR(10) + 'Out of the songs in 2024, the three I certainly listen to the most still are RATATA, Suffocate, and Good Graces.');
+
+INSERT INTO Music.FavoriteSongsOfYearComments ([Year], Comment)
+SELECT tyc.[Year], tyc.Comment
+FROM #TempYearsComments tyc
+LEFT JOIN Music.FavoriteSongsOfYearComments yc ON yc.[Year] = tyc.[Year] AND yc.Comment = tyc.Comment
+WHERE yc.[Year] IS NULL;
+GO
+
+
+------- Initial favorite songs -------
+IF NOT EXISTS (SELECT * FROM sys.tables WHERE [name] = 'FavoriteSongsOfYear' AND [schema_id] = SCHEMA_ID('Music'))
+BEGIN
+    CREATE TABLE Music.FavoriteSongsOfYear (
+		Id INT IDENTITY(1,1) PRIMARY KEY,
         SongName NVARCHAR(256) NOT NULL,
         Artist NVARCHAR(128) NOT NULL,
         Album NVARCHAR(128) NOT NULL,
@@ -8,16 +45,9 @@ BEGIN
         SongLength TIME NOT NULL,
         AppleMusicLink NVARCHAR(256) NOT NULL,
         SpotifyLink NVARCHAR(256) NOT NULL,
-        Year INT NOT NULL,
-        CONSTRAINT PK_Songs PRIMARY KEY (SongName, Artist)
-    );
-END
-
-IF NOT EXISTS (SELECT * FROM sys.tables WHERE [Name] = 'YearsComments')
-BEGIN
-    CREATE TABLE YearsComments (
-        Year INT PRIMARY KEY,
-        Comment NVARCHAR(MAX) NOT NULL
+        [Year] INT NOT NULL,
+        CONSTRAINT UN_FavoriteSongsOfYear UNIQUE (SongName, Artist),
+		CONSTRAINT FK_CommentOfFavoritesYear FOREIGN KEY ([Year]) REFERENCES Music.FavoriteSongsOfYearComments([Year])
     );
 END
 
@@ -30,10 +60,10 @@ CREATE TABLE #TempSongs (
         AppleMusicLink NVARCHAR(256) NOT NULL,
         SpotifyLink NVARCHAR(256) NOT NULL,
         Year INT NOT NULL,
-        CONSTRAINT PK_TempSongs PRIMARY KEY (SongName, Artist)
+        CONSTRAINT UN_TempSongs UNIQUE (SongName, Artist)
     );
    
-INSERT INTO #TempSongs (SongName, Artist, Album, Genre, SongLength, AppleMusicLink, SpotifyLink, Year)
+INSERT INTO #TempSongs (SongName, Artist, Album, Genre, SongLength, AppleMusicLink, SpotifyLink, [Year])
 VALUES
     ('Bear Claws', 'The Academic', 'Tales from the Backseat', 'Alternative', '00:03:33', 'https://music.apple.com/us/album/bear-claws/1481420364?i=1481420639', 'https://open.spotify.com/track/3lJIMpVTbmEwUXy0m4U9lU?si=Y2tEAMNZTcKHv-5rtUW-uw', 2017),
 	('Never Sorry', 'All That Remains', 'Madness', 'Heavy Metal', '00:03:38', 'https://music.apple.com/us/album/never-sorry/1440946633?i=1215489068', 'https://open.spotify.com/track/3LNYKMfgG2UScseEv92XeP?si=q79um6KaRBKIi42XgnAuUA', 2017),
@@ -147,30 +177,8 @@ VALUES
 	('Soft Spine', 'Spiritbox', 'Tsunami Sea', 'Metal', '00:03:04', 'https://music.apple.com/us/album/soft-spine/1779147456?i=1779147890', 'https://open.spotify.com/track/3t5GlWUzGSt2lPuiSEPBFG?si=c4a946fc6cb24e40', 2024),
 	('I GOT YOU', 'TWICE', 'With YOU-th - EP', 'K-Pop', '00:02:53', 'https://music.apple.com/us/album/i-got-you/1726087580?i=1726087587', 'https://open.spotify.com/track/0mgveJEIGjcN51w4JIQtI6?si=03b16ecd1fb541aa', 2024);
 
-INSERT INTO Songs (SongName, Artist, Album, Genre, SongLength, AppleMusicLink, SpotifyLink, Year)
-SELECT ts.SongName, ts.Artist, ts.Album, ts.Genre, ts.SongLength, ts.AppleMusicLink, ts.SpotifyLink, ts.Year
+INSERT INTO Music.FavoriteSongsOfYear (SongName, Artist, Album, Genre, SongLength, AppleMusicLink, SpotifyLink, [Year])
+SELECT ts.SongName, ts.Artist, ts.Album, ts.Genre, ts.SongLength, ts.AppleMusicLink, ts.SpotifyLink, ts.[Year]
 FROM #TempSongs ts
-LEFT JOIN Songs s ON s.SongName = ts.SongName AND s.Artist = ts.Artist
+LEFT JOIN Music.FavoriteSongsOfYear s ON s.SongName = ts.SongName AND s.Artist = ts.Artist
 WHERE s.SongName IS NULL;
-
-CREATE TABLE #TempYearsComments (
-	Year INT PRIMARY KEY,
-	Comment NVARCHAR(MAX) NOT NULL
-);
-
-INSERT INTO #TempYearsComments (Year, Comment)
-VALUES
-	(2017, '2017 was the first year I made this list, and was before I made the rule of only one song per artist.  Looking back on it, I most definitely would switch out about half the songs with other ones released that year.  I find this to be the case with every year, however.  Sometimes it''s because my taste in music evolves, but it mostly seems to be because I start listening to a song the year after it''s released, especially if it was late in the year.  This is the year where it''s the former rather than the latter, however.' + CHAR(10) + CHAR(10) + 'Out of my existing list, though, the three that I''ve kept listening to consistently since are Bear Claws, How Do You Feel?, and Less Than.'),
-	(2018, 'After not liking that my 2017 list contained a couple songs from the same artist, I decided to impose the rule of no more than one song per artist.  An artist/band being featured on another artist/band''s song is okay, but it explicitly cannot be their song.  This made it more interesting for me since not only did I have to narrow down to a single song off of an album, I had to listen to songs and albums by other artists I may not have listened to before.' + CHAR(10) + CHAR(10) + 'As far as songs I would switch out with other ones released in 2018, I would probably switch out only a couple at most.  I really enjoyed most of the music I listened to that year and haven''t discovered more than a couple songs released in 2018 since that I would replace the others with.' + CHAR(10) + CHAR(10) + 'Out of my existing list, the three I''ve continued listening to the most is difficult to pin down, but most likely Starlight, What is Love?, and Voices in My Head.'),
-	(2019, 'This year actually was somewhat difficult to get enough songs for the list.  There were five albums that I primarily listened to because they were so good, meaning I didn''t listen to more artists I would have liked to because I had those albums almost exclusively on repeat at various times throughout the year.  If I did not create the rule of no more than one song per artist this list would have consisted of songs primarily by FEVER 333, BABYMETAL, TWICE, and The Maine.  I''m pretty sure the entire summer of 2019 I listened to almost exclusively FEVER 333, and October and November seemed as if BABYMETAL and TWICE had a reservation for my time.  I ultimately decided on enough songs to consist of a solid list, though.' + CHAR(10) + CHAR(10) + 'As with 2018, there''s one song, maybe two I would switch out with a song on this list, but overall I think the list was a pretty good one.' + CHAR(10) + CHAR(10) + 'Out of my existing list, the three I''ve continued listening to the most, without question, are Brand New Day, LOVE FOOLISH, and THE INNOCENT.'),
-	(2020, 'TWICE makes their third appearance, as does BABYMETAL (even if it is just a feature)!  If I had been more into TWICE in 2017, they would have made an appearance every year since I''ve started this.  Overall, I was somewhat pleased with the music released in 2020.  System of a Down, a favorite of mine, released their first music in over a decade.  Selena Gomez and DREAMCATCHER, a new find for me, had superb albums released at the beginning of the year (I vividly remember this because of COVID), so it was difficult picking one song from each album.  Besides those and the FEVER 333 song, though, I kind of struggled to really get a solid top 13.  John the Ghost is the singer for one of my favorite bands that has made many appearances already (The Maine), so that wasn''t very difficult, but otherwise there are a few songs I haven''t listened to much since.  I had hoped that quarantine would provide artists with some more time, but of course they may have easily just taken it as time off.  I had several concerts lined up for this year, and every single one got cancelled, so it would make sense.' + CHAR(10) + CHAR(10) + 'Out of this year, the three songs I''ve continued to listen to are A Sweeter Place, UP NO MORE, and PRESENCE IS STRENGTH.'),
-	(2021, 'This year was, like 2019, a bit difficult to compile.  Most of the songs are songs I listened to towards the beginning of the year.  TWICE again makes an appearance, and another K-Pop artist (IU) makes a first appearance.  I''ve listened to several of the artists on the list previously, so it was nice to hear their newer music and to say I''m still a fan.  The Hunna was a band I discovered at a show for Jimmy Eat World years ago, so I was happy to enjoy some of their newer music.  As for some of the others (The Blue Stones, ERRA, IU, and Teenage Wrist), I loved discovering their music this year and obsessively listening to it.  While I was down in Georgia for work, these artists accompanied me while I was sitting in a warehouse for 11 hours a day.' + CHAR(10) + CHAR(10) + 'For this year, the three songs that I''ve religiously listened to are Bad Place, Lilac, and Always The Same.  Lilac is a song I listened to over 40 times in a single day while I was in Georgia, for example!  I can''t say I''m proud of that detail.'),
-	(2022, 'This was once again another year that I found it difficult to find enough new music to fill the list.  ERRA and The Blue Stones make a return, and Electric Callboy was a fantastic discovery!  I was not surprised that TWICE made the list again.  When I first listened to Talk that Talk I wasn''t that impressed, but it quickly became one of my favorites of theirs.' + CHAR(10) + CHAR(10) + 'Despite the trouble I had with finding songs to add to the list, I listen to most of the songs on this list a lot to this day.  Now that I''ve given more music from the year a chance there are songs I would certainly swap out with others that are on the list, but overall I enjoyed it.  The three songs on this list that I listen to the most still today are Neon, Loved You a Little, and Talk that Talk.'),
-	(2023, 'Finally, for the first time since I started this list, Avenged Sevenfold released a new album (their first since 2016).  Avenged Sevenfold has been my all time favorite band since 2008, so I always celebrate new music from them.  In 2017 they began "evolving" their album from 2016 by adding covers, but I did''nt quite want to add them to the list.  Besides that, there are several new additions that I am happy to have learned about (notably Calva Louise and Make Them Suffer).  MISAMO was a bit of a sheepish addition, however, since they''re a subunit of TWICE.' + CHAR(10) + CHAR(10) + 'I still find myself listening to nearly every song on this list, and besides maybe one or two I can''t think of many other songs I would replace something on this list with.  Out of the songs on it, though, I''d say that the three songs I continue to listen to the most to this day are Cosmic, Ghost Of Me, and Essence.'),
-	(2024, 'Unlike a couple of the previous years, I found it difficult to actually trim this down to just 13. Unsurprisingly, TWICE has made it once again, and I''m sure this will be the case for 2025. I''m writing this retrospective a bit earlier than I have in previous years, so I only have maybe one or two songs that I''d replace in this list now.  Overall, however, I do like how diverse the music in this list seems to be, genre-wise; it''s a pretty solid representation of the music I listen to.  Little Big is a group my sister, friend, and I have been listening to since late 2019.  They''re a weird Russian rave group that makes some funny music and great music videos, and my sister, my friend, and I have gone to Chicago and Detroit to see them live now, and it was great both times.' + CHAR(10) + CHAR(10) + 'Out of the songs in 2024, the three I certainly listen to the most still are RATATA, Suffocate, and Good Graces.');
-
-INSERT INTO YearsComments (Year, Comment)
-SELECT tyc.Year, tyc.Comment
-FROM #TempYearsComments tyc
-LEFT JOIN YearsComments yc ON yc.Year = tyc.Year AND yc.Comment = tyc.Comment
-WHERE yc.Year IS NULL;

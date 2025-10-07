@@ -1,11 +1,17 @@
-from models.about_me_model import AboutMeModel
+from schemas import AboutMeModel
 
 
-class TripleTriadCardSchema(AboutMeModel):
-    card_name: str = None
-    left: int = None
-    up: int = None
-    right: int = None
-    down: int = None
+class TripleTriadCardBase(AboutMeModel):
+    card_name: str
+    left: int
+    up: int
+    right: int
+    down: int
     element: str | None = None
-    level: int = None
+    level: int
+
+class TripleTriadCardCreate(TripleTriadCardBase):
+    pass 
+
+class TripleTriadCardRead(TripleTriadCardBase):
+    id: int
