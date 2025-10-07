@@ -43,13 +43,23 @@ async def get_events(db: Session = Depends(get_db)):
     return result
 
 
-@router.get("/artists", response_model=List[ArtistRead], description="Get all artists", summary="Get Artists")
+@router.get(
+    "/artists",
+    response_model=List[ArtistRead],
+    description="Get all artists",
+    summary="Get Artists",
+)
 async def get_artists_with_events(db: Session = Depends(get_db)):
     artists_events = db.scalars(select(Artist)).all()
     return artists_events
 
 
-@router.get("/events", response_model=List[EventRead], description="Get all events", summary="Get Events")
+@router.get(
+    "/events",
+    response_model=List[EventRead],
+    description="Get all events",
+    summary="Get Events",
+)
 async def get_events_with_artists(db: Session = Depends(get_db)):
     events = db.scalars(select(Event)).all()
     return events
