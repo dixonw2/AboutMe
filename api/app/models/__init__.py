@@ -1,1 +1,1 @@
-from .triple_triad_card import TripleTriadCard
+from .games.triple_triad_card import TripleTriadCard

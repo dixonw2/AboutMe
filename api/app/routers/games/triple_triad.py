@@ -5,8 +5,8 @@ from sqlalchemy.orm import Session
 from sqlalchemy import func, select
 from database import get_db
 
-from schemas.triple_triad_card import TripleTriadCardRead
-from models.triple_triad_card import TripleTriadCard
+from schemas.games.triple_triad_card import TripleTriadCardRead
+from models.games.triple_triad_card import TripleTriadCard
 
 router = APIRouter(prefix="/triple-triad", tags=["triple-triad"])
 
