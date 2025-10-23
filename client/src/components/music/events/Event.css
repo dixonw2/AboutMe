@@ -1,0 +1,24 @@
+.event-container {
+  border: 2px solid black;
+}
+
+.event-container:hover {
+  cursor: pointer;
+  background-color: gray;
+}
+
+/* Make h2 and p behave like rows with space between items */
+.event-container h2,
+.event-container p {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 10px;
+}
+
+.event-container .date {
+  color: darkgray;
+}
+.event-container ul {
+  list-style: none;
+}

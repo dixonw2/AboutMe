@@ -8,7 +8,7 @@ class Event(Base):
     __table_args__ = {"schema": "Music"}
 
     id = Column("id", Integer, primary_key=True, autoincrement=True)
-    event_name = Column("EventName", String(64), nullable=False)
+    event_name = Column("EventName", String(64), nullable=True)
     headliner = Column("Headliner", String(64), nullable=True)
     date = Column("Date", Date, nullable=False)
     venue = Column("Venue", String(64), nullable=False)
