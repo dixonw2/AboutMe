@@ -8,6 +8,7 @@ import type Year from "@/types/Year";
 import type EventArtists from "@/types/EventArtists";
 
 import Events from "./music/events/EventsList";
+import Card from "./games/triple-triad/Card";
 
 const App = () => {
   const [songs, setSongs] = useState<Song[]>([]);
@@ -55,6 +56,7 @@ const App = () => {
   const handleToggleEvents = () => {
     setShowFavorites((prev) => !prev);
   };
+  return <Card />;
 
   return (
     <>
