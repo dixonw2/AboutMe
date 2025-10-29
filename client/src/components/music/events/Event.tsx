@@ -27,7 +27,6 @@ const Event = ({ event }: { event: EventArtists }) => {
   const eventName =
     event.eventName ||
     `${event.headliner} ${getSeason(event.date)} '${getYear(event.date)}`;
-
   // force timezone to have accurate date
   const eventDate = new Date(`${event.date}T00:00:00`).toLocaleDateString();
 
