@@ -1,8 +1,9 @@
 from database import Base
 from sqlalchemy import Column, Integer, String, Text, DateTime, func
+from sqlalchemy.orm import relationship
 
 
-class Comment(Base):
+class FavoritesComment(Base):
     __tablename__ = "FavoriteSongsOfYearComments"
     __table_args__ = {"schema": "Music"}
 
@@ -17,3 +18,5 @@ class Comment(Base):
     date_updated = Column(
         "DateUpdated", DateTime, nullable=True, onupdate=func.sysutcdatetime()
     )
+
+    songs = relationship("FavoritesSong", back_populates="comment")

@@ -1,5 +1,10 @@
 from .favorite_songs.song import SongRead, SongCreate
-from .favorite_songs.comment import CommentRead, CommentCreate, CommentUpdate
+from .favorite_songs.comment import (
+    CommentRead,
+    CommentCreate,
+    CommentUpdate,
+    CommentWithSongsRead,
+)
 
 from .events.artists_events import (
     ArtistAtEventRead,
