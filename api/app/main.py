@@ -17,7 +17,6 @@ app.add_middleware(
 
 Base.metadata.create_all(bind=engine)
 
-app.include_router(routers.songs_router, prefix="/api")
-app.include_router(routers.comments_router, prefix="/api")
+app.include_router(routers.favorite_songs_router, prefix="/api")
 app.include_router(routers.triple_triad_router, prefix="/api")
 app.include_router(routers.events_router, prefix="/api")

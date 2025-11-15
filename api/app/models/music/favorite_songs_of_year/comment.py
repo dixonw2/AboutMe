@@ -6,7 +6,7 @@ class Comment(Base):
     __tablename__ = "FavoriteSongsOfYearComments"
     __table_args__ = {"schema": "Music"}
 
-    year = Column("Year", Integer, primary_key=True)
+    year = Column("Year", Integer, primary_key=True, autoincrement=False)
     comment = Column("Comment", String(512), nullable=False)
     date_created = Column(
         "DateCreated",

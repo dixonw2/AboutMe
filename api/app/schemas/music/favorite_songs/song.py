@@ -10,7 +10,6 @@ class SongBase(AboutMeModel):
     song_length: datetime.time
     apple_music_link: str
     spotify_link: str
-    year: int
 
 
 class SongCreate(SongBase):
@@ -19,3 +18,4 @@ class SongCreate(SongBase):
 
 class SongRead(SongBase):
     id: int
+    year: int
