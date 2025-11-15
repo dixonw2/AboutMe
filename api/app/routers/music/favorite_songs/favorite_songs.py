@@ -73,11 +73,11 @@ async def post_yearly_entry(
             detail=f"Comment already exists for year {year}",
         )
 
-    # if len(songs) != 13:
-    #     raise HTTPException(
-    #         status_code=status.HTTP_400_BAD_REQUEST,
-    #         detail=f"Needs exactly 13 songs (Currently have {len(songs)})",
-    #     )
+    if len(songs) != 13:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=f"Needs exactly 13 songs (Currently have {len(songs)})",
+        )
 
     new_comment = Comment(**comment.model_dump(exclude_unset=True), year=year)
     db.add(new_comment)
