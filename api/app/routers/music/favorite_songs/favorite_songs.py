@@ -79,7 +79,7 @@ async def post_yearly_entry(
             detail=f"Needs exactly 13 songs (Currently have {len(songs)})",
         )
 
-    new_comment = Comment(**comment.model_dump(exclude_unset=True), year=year)
+    new_comment = Comment(**comment.model_dump(), year=year)
     db.add(new_comment)
     db.commit()
     db.refresh(new_comment)

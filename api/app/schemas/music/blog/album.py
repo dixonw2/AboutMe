@@ -23,4 +23,7 @@ class AlbumCreate(AlbumBase):
 class AlbumRead(AlbumBase):
     id: int
     date_created: datetime.datetime
+
+
+class AlbumWithSongsRead(AlbumRead):
     songs: List[SongRead]

@@ -13,3 +13,4 @@ class SongCreate(SongBase):
 
 class SongRead(SongBase):
     id: int
+    id_blog_albums: int

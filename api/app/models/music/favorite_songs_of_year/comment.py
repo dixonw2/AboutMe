@@ -1,5 +1,5 @@
 from database import Base
-from sqlalchemy import Column, Integer, Text, DateTime, func
+from sqlalchemy import Column, Integer, String, Text, DateTime, func
 
 
 class Comment(Base):
