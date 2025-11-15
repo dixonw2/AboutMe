@@ -1,8 +1,9 @@
 from sqlalchemy import Column, ForeignKey, Integer, String, Time, UniqueConstraint
 from database import Base
+from sqlalchemy.orm import relationship
 
 
-class Song(Base):
+class FavoritesSong(Base):
     __tablename__ = "FavoriteSongsOfYear"
     __table_args__ = (
         UniqueConstraint("SongName", "Artist", name="UN_FavoriteSongsOfYear"),
@@ -24,3 +25,5 @@ class Song(Base):
         index=True,
         nullable=False,
     )
+
+    comment = relationship("FavoritesComment", back_populates="songs")

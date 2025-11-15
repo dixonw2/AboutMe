@@ -1,35 +1,31 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy import select
 from sqlalchemy.orm import Session
+from sqlalchemy.exc import SQLAlchemyError
 from typing import List
 
-from schemas.music import SongRead, SongCreate
-from models.music import Song
-from schemas.music import CommentRead, CommentCreate, CommentUpdate
-from models.music import Comment
+from schemas.music import SongCreate
+from models.music import FavoritesSong
+from schemas.music import (
+    CommentRead,
+    CommentCreate,
+    CommentUpdate,
+    CommentWithSongsRead,
+)
+from models.music import FavoritesComment
 
 from database import get_db
-
-from schemas.about_me_model import AboutMeModel
 
 router = APIRouter(prefix="/music/favorite-songs", tags=["favorite songs"])
 
 
-class YearlyEntryRead(AboutMeModel):
-    songs: List[SongRead]
-    comment: CommentRead
-
-
-@router.get("/songs", response_model=List[SongRead], description="Get songs")
-async def get_songs(db: Session = Depends(get_db)):
-    return db.scalars(select(Song)).all()
-
-
 @router.get(
-    "/comments", response_model=List[CommentRead], description="Get comments for years"
+    "/",
+    response_model=List[CommentWithSongsRead],
+    description="Get favorites for every year",
 )
-async def get_comments(db: Session = Depends(get_db)):
-    return db.scalars(select(Comment)).all()
+async def get_favorites(db: Session = Depends(get_db)):
+    return db.scalars(select(FavoritesComment)).all()
 
 
 @router.put(
@@ -40,7 +36,9 @@ async def get_comments(db: Session = Depends(get_db)):
 async def update_comment(
     year: int, comment: CommentUpdate, db: Session = Depends(get_db)
 ):
-    update_comment = db.scalar(select(Comment).where(Comment.year == year))
+    update_comment = db.scalar(
+        select(FavoritesComment).where(FavoritesComment.year == year)
+    )
     if not update_comment:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
@@ -55,7 +53,7 @@ async def update_comment(
 
 @router.post(
     "/new",
-    response_model=YearlyEntryRead,
+    response_model=CommentWithSongsRead,
     status_code=status.HTTP_201_CREATED,
     description="Create a new comment for the year",
 )
@@ -65,30 +63,29 @@ async def post_yearly_entry(
     year: int,
     db: Session = Depends(get_db),
 ):
-
-    exists = db.scalar(select(Comment).where(Comment.year == year))
-    if exists:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail=f"Comment already exists for year {year}",
-        )
-
     if len(songs) != 13:
         raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail=f"Needs exactly 13 songs (Currently have {len(songs)})",
+            status_code=400,
+            detail=f"Needs exactly 13 songs (currently {len(songs)})",
         )
 
-    new_comment = Comment(**comment.model_dump(exclude_unset=True), year=year)
-    db.add(new_comment)
-    db.commit()
-    db.refresh(new_comment)
+    try:
+        new_comment = FavoritesComment(**comment.model_dump(), year=year)
+        db.add(new_comment)
+        db.flush()
 
-    new_songs = [Song(**s.model_dump(), year=year) for s in songs]
-    db.add_all(new_songs)
-    db.commit()
+        new_songs = [
+            FavoritesSong(**s.model_dump(), comment=new_comment) for s in songs
+        ]
+        db.add_all(new_songs)
+        db.commit()
 
-    for s in new_songs:
-        db.refresh(s)
+    except SQLAlchemyError:
+        db.rollback()
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=f"Could not add new list for year {year}",
+        )
 
-    return YearlyEntryRead(songs=new_songs, comment=new_comment)
+    db.refresh(new_comment, ["songs"])
+    return new_comment
