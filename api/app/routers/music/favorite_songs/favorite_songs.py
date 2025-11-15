@@ -5,7 +5,7 @@ from typing import List
 
 from schemas.music import SongRead, SongCreate
 from models.music import Song
-from schemas.music import CommentRead, CommentCreate
+from schemas.music import CommentRead, CommentCreate, CommentUpdate
 from models.music import Comment
 
 from database import get_db
@@ -32,6 +32,27 @@ async def get_comments(db: Session = Depends(get_db)):
     return db.scalars(select(Comment)).all()
 
 
+@router.put(
+    "/comments/update/{year}",
+    response_model=CommentRead,
+    description="Update comment for year",
+)
+async def update_comment(
+    year: int, comment: CommentUpdate, db: Session = Depends(get_db)
+):
+    update_comment = db.scalar(select(Comment).where(Comment.year == year))
+    if not update_comment:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=f"Comment for year {year} not found",
+        )
+
+    update_comment.comment = comment.comment
+    db.commit()
+    db.refresh(update_comment)
+    return update_comment
+
+
 @router.post(
     "/new",
     response_model=YearlyEntryRead,
@@ -52,11 +73,11 @@ async def post_yearly_entry(
             detail=f"Comment already exists for year {year}",
         )
 
-    if len(songs) != 13:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail=f"Needs exactly 13 songs (Currently have {len(songs)})",
-        )
+    # if len(songs) != 13:
+    #     raise HTTPException(
+    #         status_code=status.HTTP_400_BAD_REQUEST,
+    #         detail=f"Needs exactly 13 songs (Currently have {len(songs)})",
+    #     )
 
     new_comment = Comment(**comment.model_dump(exclude_unset=True), year=year)
     db.add(new_comment)

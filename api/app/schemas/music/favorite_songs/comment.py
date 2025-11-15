@@ -14,3 +14,7 @@ class CommentRead(CommentBase):
     year: int
     date_created: datetime.datetime
     date_updated: datetime.datetime | None = None
+
+
+class CommentUpdate(CommentBase):
+    pass
