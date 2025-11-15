@@ -1,5 +1,5 @@
 from database import Base
-from sqlalchemy import Column, Integer, String, DateTime, func
+from sqlalchemy import Column, Integer, Text, DateTime, func
 
 
 class Comment(Base):
@@ -7,7 +7,7 @@ class Comment(Base):
     __table_args__ = {"schema": "Music"}
 
     year = Column("Year", Integer, primary_key=True, autoincrement=False)
-    comment = Column("Comment", String(512), nullable=False)
+    comment = Column("Comment", Text, nullable=False)
     date_created = Column(
         "DateCreated",
         DateTime,

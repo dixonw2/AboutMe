@@ -10,3 +10,6 @@ from .events.artists_events import (
 )
 from .events.artist import ArtistRead
 from .events.event import EventRead
+
+from .blog.album import AlbumRead as BlogAlbumRead
+from .blog.song import SongRead as BlogSongRead
