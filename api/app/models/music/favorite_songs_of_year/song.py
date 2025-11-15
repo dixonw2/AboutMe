@@ -9,7 +9,7 @@ class Song(Base):
         {"schema": "Music"},
     )
 
-    id = Column("id", primary_key=True, autoincrement=True)
+    id = Column("id", Integer, primary_key=True, autoincrement=True)
     song_name = Column("SongName", String(256), nullable=False)
     artist = Column("Artist", String(128), nullable=False)
     album = Column("Album", String(128), nullable=False)

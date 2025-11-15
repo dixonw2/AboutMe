@@ -8,7 +8,7 @@ from database import get_db
 from schemas.games.triple_triad_card import TripleTriadCardRead
 from models.games.triple_triad_card import TripleTriadCard
 
-router = APIRouter(prefix="/triple-triad", tags=["triple-triad"])
+router = APIRouter(prefix="/triple-triad", tags=["triple triad"])
 
 
 # region Endpoints
