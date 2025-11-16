@@ -23,6 +23,6 @@ BEGIN
         SongName NVARCHAR(256) NOT NULL,
         SongLength TIME NOT NULL,
         IdBlogAlbums INT NOT NULL,
-        CONSTRAINT FK_BlogAlbums FOREIGN KEY (IdBlogAlbums) REFERENCES Music.BlogAlbums(Id)
+        CONSTRAINT FK_BlogAlbums FOREIGN KEY (IdBlogAlbums) REFERENCES Music.BlogAlbums(Id) ON DELETE CASCADE
     )
 END

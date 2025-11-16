@@ -66,3 +66,22 @@ async def create_album(
 
     db.refresh(new_album, ["songs"])
     return new_album
+
+
+@router.delete("/albums/delete/{id}", status_code=status.HTTP_204_NO_CONTENT)
+async def delete_album(id: int, db: Session = Depends(get_db)):
+    album = db.get(BlogAlbum, id)
+    if not album:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail="Album not found"
+        )
+
+    try:
+        db.delete(album)
+        db.commit()
+    except SQLAlchemyError:
+        db.rollback()
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=f"Could not delete album {album.album} with id {id}",
+        )

@@ -36,4 +36,9 @@ class BlogAlbum(Base):
         server_default=func.sysutcdatetime(),
     )
 
-    songs = relationship("BlogAlbumSong", back_populates="album")
+    songs = relationship(
+        "BlogAlbumSong",
+        back_populates="album",
+        cascade="all, delete-orphan",
+        passive_deletes=True,
+    )
