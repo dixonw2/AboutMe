@@ -13,7 +13,7 @@ class BlogAlbumSong(Base):
     id_blog_albums = Column(
         "IdBlogAlbums",
         Integer,
-        ForeignKey("Music.BlogAlbums.Id"),
+        ForeignKey("Music.BlogAlbums.Id", ondelete="CASCADE"),
         index=True,
         nullable=False,
     )
