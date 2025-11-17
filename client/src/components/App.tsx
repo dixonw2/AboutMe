@@ -11,6 +11,8 @@ import type TripleTriadCard from "@/types/TripleTriadCard";
 import Events from "./music/events/EventsList";
 import Card from "./games/triple-triad/Card";
 
+import { Routes, Route, Link } from "react-router-dom";
+
 const App = () => {
   const [songs, setSongs] = useState<Song[]>([]);
   const [years, setYears] = useState<Year[]>([]);
