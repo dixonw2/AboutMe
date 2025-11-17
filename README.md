@@ -1,6 +1,6 @@
 # About Me
 
-This is a project for me to practice full stack development while building an application that is, effectively, a compilation of mini projects I've wanted to build for a while now!
+This is a project for me to practice full stack development while learning React and building an application that is, effectively, a compilation of mini projects I've wanted to build for a while now!
 
 ## Favorite Songs
 
