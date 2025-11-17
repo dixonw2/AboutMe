@@ -21,7 +21,7 @@ class FavoritesSong(Base):
     year = Column(
         "Year",
         Integer,
-        ForeignKey("Music.FavoriteSongsOfYearComments.Year"),
+        ForeignKey("Music.FavoriteSongsOfYearComments.Year", ondelete="CASCADE"),
         index=True,
         nullable=False,
     )
