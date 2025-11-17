@@ -19,4 +19,6 @@ class FavoritesComment(Base):
         "DateUpdated", DateTime, nullable=True, onupdate=func.sysutcdatetime()
     )
 
-    songs = relationship("FavoritesSong", back_populates="comment")
+    songs = relationship(
+        "FavoritesSong", cascade="all, delete-orphan", back_populates="comment"
+    )

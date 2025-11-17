@@ -47,7 +47,7 @@ BEGIN
         SpotifyLink NVARCHAR(256) NOT NULL,
         [Year] INT NOT NULL,
         CONSTRAINT UN_FavoriteSongsOfYear UNIQUE (SongName, Artist),
-		CONSTRAINT FK_CommentOfFavoritesYear FOREIGN KEY ([Year]) REFERENCES Music.FavoriteSongsOfYearComments([Year])
+		CONSTRAINT FK_CommentOfFavoritesYear FOREIGN KEY ([Year]) REFERENCES Music.FavoriteSongsOfYearComments([Year]) ON DELETE CASCADE
     );
 END
 

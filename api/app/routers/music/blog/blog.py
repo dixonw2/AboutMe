@@ -68,12 +68,17 @@ async def create_album(
     return new_album
 
 
-@router.delete("/albums/delete/{id}", status_code=status.HTTP_204_NO_CONTENT)
+@router.delete(
+    "/albums/delete/{id}",
+    status_code=status.HTTP_204_NO_CONTENT,
+    description="Delete album with specified id",
+)
 async def delete_album(id: int, db: Session = Depends(get_db)):
     album = db.get(BlogAlbum, id)
     if not album:
         raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND, detail="Album not found"
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"Album not found with id {id}",
         )
 
     try:
