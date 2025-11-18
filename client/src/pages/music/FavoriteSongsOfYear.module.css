@@ -1,0 +1,22 @@
+.header {
+  font-size: 60px;
+}
+
+.container {
+  width: 100%;
+  max-width: 1200px;
+  padding: 0 3rem;
+}
+
+.container hr {
+  width: 100%;
+}
+
+.yearHeader {
+  font-size: 50px;
+  color: lightgray;
+}
+
+.comment {
+  padding: 0 4rem;
+}
