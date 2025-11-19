@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import SongsTable from "@/components/music/favorite-songs/SongsTable";
 import type Year from "@/types/favorite-songs/Year";
 import styles from "./FavoriteSongsOfYear.module.css";
@@ -6,36 +6,52 @@ import styles from "./FavoriteSongsOfYear.module.css";
 const FavoriteSongsOfYear = () => {
   const [loading, setLoading] = useState(true);
   const [years, setYears] = useState<Year[]>([]);
+  const [currentYear, setCurrentYear] = useState(0);
 
   useEffect(() => {
     const getYears = async () => {
       const res = await fetch("api/music/favorite-songs");
       const data = await res.json();
       setYears(data);
+      setCurrentYear(data[0]?.year);
       setLoading(false);
     };
 
     getYears();
   }, []);
 
+  const handleClick = (year: number) => {
+    setCurrentYear(year);
+  };
+
   return (
     <>
+      <title>Favorite Songs</title>
       <div className={styles.container}>
         <FavoritesOverview />
       </div>
       <hr />
-      <div>
-        {years.map((year) =>
-          loading ? (
-            <em>Loading...</em>
-          ) : (
-            <>
-              <YearInfo year={year} />
-              <SongsTable year={year.year} songs={year.songs} />
-            </>
-          )
-        )}
-      </div>
+      {loading ? (
+        <em>Loading...</em>
+      ) : (
+        <div>
+          {years.map((year) => (
+            <Button onClick={() => handleClick(year.year)}>{year.year}</Button>
+          ))}
+
+          {(() => {
+            const selected = years.find((year) => year.year == currentYear);
+            return (
+              selected && (
+                <FavoritesContainer>
+                  <YearInfo year={selected} />
+                  <SongsTable year={selected.year} songs={selected.songs} />
+                </FavoritesContainer>
+              )
+            );
+          })()}
+        </div>
+      )}
     </>
   );
 };
@@ -88,6 +104,10 @@ const FavoritesOverview = () => {
   );
 };
 
+const FavoritesContainer = ({ children }: { children: ReactNode }) => {
+  return children;
+};
+
 const YearInfo = ({ year }: { year: Year }) => {
   return (
     <div className={styles.comment}>
@@ -95,6 +115,16 @@ const YearInfo = ({ year }: { year: Year }) => {
       <p>{year.comment}</p>
     </div>
   );
+};
+
+const Button = ({
+  onClick,
+  children,
+}: {
+  onClick: () => void;
+  children: ReactNode;
+}) => {
+  return <button onClick={onClick}>{children}</button>;
 };
 
 export default FavoriteSongsOfYear;

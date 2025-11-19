@@ -1,6 +1,6 @@
 //import "./App.css";
 
-import FavoriteSongsOfYear from "@/pages/music/FavoriteSongsOfYear";
+import FavoriteSongsOfYear from "@/pages/music/FavoriteSongsOfYear/FavoriteSongsOfYear";
 
 const App = () => {
   return (
