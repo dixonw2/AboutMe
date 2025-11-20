@@ -43,10 +43,10 @@ const FavoriteSongsOfYear = () => {
             const selected = years.find((year) => year.year == currentYear);
             return (
               selected && (
-                <FavoritesContainer>
+                <>
                   <YearInfo year={selected} />
                   <SongsTable year={selected.year} songs={selected.songs} />
-                </FavoritesContainer>
+                </>
               )
             );
           })()}
@@ -102,10 +102,6 @@ const FavoritesOverview = () => {
       </p>
     </div>
   );
-};
-
-const FavoritesContainer = ({ children }: { children: ReactNode }) => {
-  return children;
 };
 
 const YearInfo = ({ year }: { year: Year }) => {
