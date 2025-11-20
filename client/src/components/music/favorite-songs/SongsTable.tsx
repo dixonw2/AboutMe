@@ -1,7 +1,6 @@
-import type Song from "../../../types/Song";
+import type Song from "../../../types/favorite-songs/Song";
 
 const SongsTable = ({ songs, year }: { songs: Song[]; year: number }) => {
-
   return (
     <table aria-label={`Favorite Songs of ${year}`}>
       <thead>

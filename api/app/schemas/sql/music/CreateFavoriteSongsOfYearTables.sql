@@ -5,7 +5,7 @@ BEGIN
         [Year] INT PRIMARY KEY,
         Comment NVARCHAR(MAX) NOT NULL,
 		DateCreated DATETIME2 NOT NULL DEFAULT SYSUTCDATETIME(),
-		DateLastUpdated DATETIME2,
+		DateUpdated DATETIME2,
     );
 END
 
