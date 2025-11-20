@@ -7,6 +7,7 @@ const FavoriteSongsOfYear = () => {
   const [loading, setLoading] = useState(true);
   const [years, setYears] = useState<Year[]>([]);
   const [currentYear, setCurrentYear] = useState(0);
+  const selected = years.find((year) => year.year == currentYear);
 
   useEffect(() => {
     const getYears = async () => {
@@ -26,30 +27,27 @@ const FavoriteSongsOfYear = () => {
 
   return (
     <>
-      <title>Favorite Songs</title>
-      <div className={styles.container}>
-        <FavoritesOverview />
-      </div>
+      <title>
+        {loading ? "Favorite Songs" : `Favorite Songs of ${currentYear}`}
+      </title>
+      <FavoritesOverview />
       <hr />
       {loading ? (
         <em>Loading...</em>
       ) : (
         <div>
           {years.map((year) => (
-            <Button onClick={() => handleClick(year.year)}>{year.year}</Button>
+            <Button onClick={() => handleClick(year.year)} key={year.year}>
+              {year.year}
+            </Button>
           ))}
 
-          {(() => {
-            const selected = years.find((year) => year.year == currentYear);
-            return (
-              selected && (
-                <>
-                  <YearInfo year={selected} />
-                  <SongsTable year={selected.year} songs={selected.songs} />
-                </>
-              )
-            );
-          })()}
+          {selected && (
+            <>
+              <YearInfo year={selected} />
+              <SongsTable year={selected.year} songs={selected.songs} />
+            </>
+          )}
         </div>
       )}
     </>
