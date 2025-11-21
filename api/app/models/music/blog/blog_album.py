@@ -8,19 +8,19 @@ from sqlalchemy import (
     UniqueConstraint,
     func,
 )
-from database import Base
+from app.database import Base
 from sqlalchemy.orm import relationship
 
 
 class BlogAlbum(Base):
     __tablename__ = "BlogAlbums"
     __table_args__ = (
-        UniqueConstraint("Album", "Artist", name="UN_BlogAlbums"),
+        UniqueConstraint("AlbumName", "Artist", name="UN_BlogAlbums"),
         {"schema": "Music"},
     )
 
     id = Column("Id", Integer, primary_key=True, autoincrement=True)
-    album = Column("Album", String(128), nullable=False)
+    album_name = Column("AlbumName", String(128), nullable=False)
     artist = Column("Artist", String(128), index=True, nullable=False)
     genre = Column("Genre", String(32), index=True, nullable=False)
     review = Column("Review", Text, nullable=False)

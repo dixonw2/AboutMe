@@ -4,6 +4,7 @@ from .favorite_songs.comment import (
     CommentCreate,
     CommentUpdate,
     CommentWithSongsRead,
+    CommentWithSongsCreate,
 )
 
 from .events.artists_events import (
@@ -12,12 +13,16 @@ from .events.artists_events import (
     EventWithArtistsRead,
     ArtistWithEventsRead,
     EventForArtistRead,
+    EventWithArtistsCreate,
+    EventWithArtistsUpdate,
 )
-from .events.artist import ArtistRead
-from .events.event import EventRead
+from .events.artist import ArtistRead, ArtistCreate
+from .events.event import EventRead, EventCreate
 
 from .blog.album import AlbumRead as BlogAlbumRead
 from .blog.album import AlbumCreate as BlogAlbumCreate
 from .blog.album import AlbumWithSongsRead as BlogAlbumWithSongsRead
 from .blog.song import SongRead as BlogSongRead
 from .blog.song import SongCreate as BlogSongCreate
+from .blog.album import AlbumWithSongsCreate as BlogAlbumWithSongsCreate
+from .blog.album import AlbumWithSongsUpdate as BlogAlbumWithSongsUpdate

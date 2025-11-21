@@ -1,4 +1,4 @@
-from schemas import AboutMeModel
+from app.schemas import AboutMeModel
 from typing import List
 
 
@@ -8,3 +8,7 @@ class ArtistBase(AboutMeModel):
 
 class ArtistRead(ArtistBase):
     id: int
+
+
+class ArtistCreate(ArtistBase):
+    pass

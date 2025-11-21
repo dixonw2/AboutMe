@@ -1,4 +1,4 @@
-from schemas import AboutMeModel
+from app.schemas import AboutMeModel
 import datetime
 
 
@@ -18,4 +18,3 @@ class SongCreate(SongBase):
 
 class SongRead(SongBase):
     id: int
-    year: int

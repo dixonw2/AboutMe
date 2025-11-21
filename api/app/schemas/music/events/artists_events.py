@@ -1,8 +1,8 @@
-from schemas import AboutMeModel
+from app.schemas import AboutMeModel
 from typing import List
 
-from .artist import ArtistRead
-from .event import EventRead
+from .artist import ArtistRead, ArtistCreate
+from .event import EventRead, EventCreate
 
 
 class ArtistAtEventRead(ArtistRead):
@@ -14,7 +14,11 @@ class EventForArtistRead(EventRead):
 
 
 class EventWithArtistsRead(EventRead):
-    artists: List[ArtistAtEventRead] = []
+    artists: List[ArtistAtEventRead]
+
+
+class EventWithArtistsCreate(EventCreate):
+    artists: List[str]
 
 
 class ArtistsEventsBase(AboutMeModel):
@@ -28,3 +32,7 @@ class ArtistsEventsRead(ArtistsEventsBase):
 
 class ArtistWithEventsRead(ArtistRead):
     events: List[EventForArtistRead] = []
+
+
+class EventWithArtistsUpdate(EventWithArtistsCreate):
+    pass

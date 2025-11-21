@@ -1,11 +1,11 @@
 from typing import List
-from schemas import AboutMeModel
-from .song import SongRead
+from app.schemas import AboutMeModel
+from .song import SongRead, SongCreate
 import datetime
 
 
 class AlbumBase(AboutMeModel):
-    album: str
+    album_name: str
     artist: str
     genre: str
     review: str
@@ -27,3 +27,11 @@ class AlbumRead(AlbumBase):
 
 class AlbumWithSongsRead(AlbumRead):
     songs: List[SongRead]
+
+
+class AlbumWithSongsCreate(AlbumCreate):
+    songs: List[SongCreate]
+
+
+class AlbumWithSongsUpdate(AlbumWithSongsCreate):
+    pass
