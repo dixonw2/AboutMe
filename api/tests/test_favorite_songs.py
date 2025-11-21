@@ -12,11 +12,11 @@ from tests.constants import TEST_CREATE_FAVORITE_ENTRY, TEST_FAVORITE_ENTRY_YEAR
 import pytest
 
 
-# Resets DB with test data before each test
 @pytest.fixture(autouse=True)
 def reset_test_favorite_entries():
+    tables_to_reset = [FavoritesComment.__table__, FavoritesSong.__table__]
     with test_engine.begin() as conn:
-        for table in reversed(Base.metadata.sorted_tables):
+        for table in tables_to_reset:
             conn.execute(delete(table))
 
     session = TestingSessionLocal()

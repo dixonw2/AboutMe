@@ -8,3 +8,7 @@ class ArtistBase(AboutMeModel):
 
 class ArtistRead(ArtistBase):
     id: int
+
+
+class ArtistCreate(ArtistBase):
+    pass

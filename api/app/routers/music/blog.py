@@ -73,6 +73,36 @@ async def get_albums(db: Session = Depends(get_db)):
     return db.scalars(select(BlogAlbum)).all()
 
 
+# @router.put(
+#     "/albums/update/{id}",
+#     response_model=BlogAlbumWithSongsRead,
+#     description="Update a blog album entry",
+# )
+# async def update_blog_album_entry(
+#     id: int, album: BlogAlbumWithSongsUpdate, db: Session = Depends(get_db)
+# ):
+#     try:
+#         update_album = db.scalar(select(BlogAlbum).where(BlogAlbum.id == id))
+#         if not update_album:
+#             raise HTTPException(
+#                 status_code=status.HTTP_404_NOT_FOUND,
+#                 detail=f"Blog entry not found with id {id}",
+#             )
+
+#         for key, value in album.model_dump().items():
+#             setattr(update_album, key, value)
+
+#         db.commit()
+#         db.refresh(update_album, ["songs"])
+#         return update_album
+
+#     except SQLAlchemyError:
+#         raise HTTPException(
+#             status_code=status.HTTP_400_BAD_REQUEST,
+#             detail=f"Could not update album {album.album_name}",
+#         )
+
+
 @router.put(
     "/albums/update/{id}",
     response_model=BlogAlbumWithSongsRead,
@@ -81,23 +111,32 @@ async def get_albums(db: Session = Depends(get_db)):
 async def update_blog_album_entry(
     id: int, album: BlogAlbumWithSongsUpdate, db: Session = Depends(get_db)
 ):
-    try:
-        update_album = db.scalar(select(BlogAlbum).where(BlogAlbum.id == id))
-        if not update_album:
-            raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND,
-                detail=f"Blog entry not found for id {id}",
-            )
+    album_db = db.scalar(select(BlogAlbum).where(BlogAlbum.id == id))
+    if not album_db:
+        raise HTTPException(
+            status_code=404,
+            detail=f"Blog entry not found with id {id}",
+        )
 
-        for key, value in album.model_dump().items():
-            setattr(update_album, key, value)
+    # --- Update album fields ---
+    data = album.model_dump(exclude={"songs"})
+    for key, value in data.items():
+        setattr(album_db, key, value)
 
-        db.commit()
-        db.refresh(update_album, ["songs"])
-        return update_album
+    # --- Replace ALL songs ---
+    album_db.songs.clear()
 
-    except SQLAlchemyError:
-        pass
+    for song in album.songs:
+        new_song = BlogAlbumSong(
+            song_name=song.song_name,
+            song_length=song.song_length,
+            id_blog_albums=album_db.id,
+        )
+        album_db.songs.append(new_song)
+
+    db.commit()
+    db.refresh(album_db)
+    return album_db
 
 
 @router.delete(

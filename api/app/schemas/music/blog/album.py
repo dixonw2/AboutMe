@@ -20,10 +20,6 @@ class AlbumCreate(AlbumBase):
     pass
 
 
-class AlbumWithSongsUpdate(AlbumBase):
-    pass
-
-
 class AlbumRead(AlbumBase):
     id: int
     date_created: datetime.datetime
@@ -35,3 +31,7 @@ class AlbumWithSongsRead(AlbumRead):
 
 class AlbumWithSongsCreate(AlbumCreate):
     songs: List[SongCreate]
+
+
+class AlbumWithSongsUpdate(AlbumWithSongsCreate):
+    pass

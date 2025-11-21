@@ -12,8 +12,9 @@ from tests.constants import TEST_CREATE_BLOG_ENTRY, TEST_FAIL_ID, TEST_UPDATE_AL
 
 @pytest.fixture(autouse=True)
 def reset_test_blog():
+    tables_to_reset = [BlogAlbumSong.__table__, BlogAlbum.__table__]
     with test_engine.begin() as conn:
-        for table in reversed(Base.metadata.sorted_tables):
+        for table in tables_to_reset:
             conn.execute(delete(table))
 
     session = TestingSessionLocal()
@@ -84,7 +85,7 @@ def test_fail_update_blog(client: TestClient):
         f"api/music/blog/albums/update/{TEST_FAIL_ID}", json=update_data
     )
     assert response.status_code == status.HTTP_404_NOT_FOUND
-    assert response.json()["detail"].startswith("Blog entry not found for id")
+    assert response.json()["detail"].startswith("Blog entry not found with id")
 
 
 def test_delete_album(client: TestClient):

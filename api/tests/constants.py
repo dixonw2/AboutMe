@@ -35,3 +35,11 @@ TEST_CREATE_BLOG_ENTRY = {
         {"songName": f"Test Song{i+1}", "songLength": "05:47:36"} for i in range(8)
     ],
 }
+
+TEST_CREATE_EVENT_ENTRY = {
+    "eventName": "Test Event",
+    "headliner": "Test Headliner",
+    "date": "2025-11-21",
+    "venue": "Test Venue",
+    "artists": [f"Test Artist {i + 1}" for i in range(5)],
+}
