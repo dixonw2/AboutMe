@@ -4,18 +4,18 @@ from sqlalchemy.orm import Session
 from sqlalchemy.exc import SQLAlchemyError
 from typing import List
 
-from schemas.music import (
+from app.schemas.music import (
     BlogAlbumRead,
     BlogSongRead,
     BlogAlbumCreate,
     BlogSongCreate,
     BlogAlbumWithSongsRead,
 )
-from models.music import BlogAlbum, BlogAlbumSong
+from app.models.music import BlogAlbum, BlogAlbumSong
 
-from database import get_db
+from app.database import get_db
 
-from schemas.about_me_model import AboutMeModel
+from app.schemas.about_me_model import AboutMeModel
 
 router = APIRouter(prefix="/music/blog", tags=["music blog"])
 

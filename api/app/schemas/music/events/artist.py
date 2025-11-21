@@ -1,4 +1,4 @@
-from schemas import AboutMeModel
+from app.schemas import AboutMeModel
 from typing import List
 
 

@@ -3,17 +3,17 @@ from sqlalchemy import select
 from sqlalchemy.orm import Session, selectinload
 from typing import List
 
-from schemas.music import ArtistAtEventRead
-from schemas.music import EventWithArtistsRead
-from schemas.music import ArtistWithEventsRead
-from schemas.music import ArtistRead
-from schemas.music import EventRead
-from schemas.music import EventForArtistRead
+from app.schemas.music import (
+    ArtistAtEventRead,
+    EventWithArtistsRead,
+    ArtistWithEventsRead,
+    ArtistRead,
+    EventRead,
+    EventForArtistRead,
+)
 
-from models.music import Artist
-from models.music import ArtistsEvents
-from models.music import Event
-from database import get_db
+from app.models.music import Artist, ArtistsEvents, Event
+from app.database import get_db
 
 router = APIRouter(prefix="/music/events", tags=["events"])
 
@@ -32,7 +32,7 @@ async def get_artists_per_event(db: Session = Depends(get_db)):
 
     result: List[EventWithArtistsRead] = []
     for event in events:
-        
+
         # for each event, get its artists with set order
         artists = [
             ArtistAtEventRead.model_validate(
@@ -61,7 +61,7 @@ async def get_events_per_artist(db: Session = Depends(get_db)):
 
     result: List[ArtistWithEventsRead] = []
     for artist in artists:
-        
+
         # for each artist, get their events with set order per event
         events = [
             EventForArtistRead.model_validate(

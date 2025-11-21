@@ -1,5 +1,5 @@
 from typing import List
-from schemas import AboutMeModel
+from app.schemas import AboutMeModel
 from .song import SongRead
 import datetime
 

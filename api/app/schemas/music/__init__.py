@@ -4,6 +4,7 @@ from .favorite_songs.comment import (
     CommentCreate,
     CommentUpdate,
     CommentWithSongsRead,
+    CommentWithSongsCreate,
 )
 
 from .events.artists_events import (

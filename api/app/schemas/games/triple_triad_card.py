@@ -1,4 +1,4 @@
-from schemas import AboutMeModel
+from app.schemas import AboutMeModel
 
 
 class TripleTriadCardBase(AboutMeModel):

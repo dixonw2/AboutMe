@@ -4,17 +4,18 @@ from sqlalchemy.orm import Session
 from sqlalchemy.exc import SQLAlchemyError
 from typing import List
 
-from schemas.music import SongCreate
-from models.music import FavoritesSong
-from schemas.music import (
+from app.schemas.music import SongCreate
+from app.models.music import FavoritesSong
+from app.schemas.music import (
     CommentRead,
     CommentCreate,
     CommentUpdate,
     CommentWithSongsRead,
+    CommentWithSongsCreate,
 )
-from models.music import FavoritesComment
+from app.models.music import FavoritesComment
 
-from database import get_db
+from app.database import get_db
 
 router = APIRouter(prefix="/music/favorite-songs", tags=["favorite songs"])
 
@@ -42,7 +43,7 @@ async def update_comment(
         )
         if not update_comment:
             raise HTTPException(
-                status_code=status.HTTP_400_BAD_REQUEST,
+                status_code=status.HTTP_404_NOT_FOUND,
                 detail=f"Comment for year {year} not found",
             )
 
@@ -66,24 +67,22 @@ async def update_comment(
     description="Create a new entry for the given year",
 )
 async def post_yearly_entry(
-    songs: List[SongCreate],
-    comment: CommentCreate,
-    year: int,
+    entry: CommentWithSongsCreate,
     db: Session = Depends(get_db),
 ):
-    if len(songs) != 13:
+    if len(entry.songs) != 13:
         raise HTTPException(
-            status_code=400,
-            detail=f"Needs exactly 13 songs (currently {len(songs)})",
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=f"Needs exactly 13 songs (currently {len(entry.songs)})",
         )
 
     try:
-        new_comment = FavoritesComment(**comment.model_dump(), year=year)
+        new_comment = FavoritesComment(comment=entry.comment, year=entry.year)
         db.add(new_comment)
         db.flush()
 
         new_songs = [
-            FavoritesSong(**s.model_dump(), comment=new_comment) for s in songs
+            FavoritesSong(**s.model_dump(), comment=new_comment) for s in entry.songs
         ]
         db.add_all(new_songs)
         db.commit()
@@ -92,7 +91,7 @@ async def post_yearly_entry(
         db.rollback()
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
-            detail=f"Could not add new list for year {year}",
+            detail=f"Could not add new list for year {entry.year}",
         )
 
     db.refresh(new_comment, ["songs"])
