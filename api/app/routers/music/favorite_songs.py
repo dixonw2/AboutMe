@@ -29,6 +29,7 @@ async def get_favorites(db: Session = Depends(get_db)):
     return db.scalars(select(FavoritesComment)).all()
 
 
+# TODO: Allow for more than just comment?
 @router.put(
     "/comments/update/{year}",
     response_model=CommentRead,

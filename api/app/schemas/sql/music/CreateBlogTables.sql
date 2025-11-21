@@ -2,7 +2,7 @@ IF NOT EXISTS (SELECT * FROM sys.tables WHERE [name] = 'BlogAlbums' AND [schema_
 BEGIN
 	CREATE TABLE Music.[BlogAlbums] (
         Id INT IDENTITY(1,1) PRIMARY KEY,
-        Album NVARCHAR(128) NOT NULL,
+        AlbumName NVARCHAR(128) NOT NULL,
         Artist NVARCHAR(128) NOT NULL,
         Genre NVARCHAR(32) NOT NULL,
         Review NVARCHAR(MAX) NOT NULL,
@@ -12,7 +12,7 @@ BEGIN
         ReleaseDate DATE NOT NULL,
         AlbumArtPath NVARCHAR(128) NOT NULL,
 		DateCreated DATETIME2 NOT NULL DEFAULT SYSUTCDATETIME(),
-		CONSTRAINT UN_BlogAlbums UNIQUE(Album, Artist)
+		CONSTRAINT UN_BlogAlbums UNIQUE(AlbumName, Artist)
 	);
 END
 

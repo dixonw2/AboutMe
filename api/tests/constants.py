@@ -1,8 +1,10 @@
 import datetime
 
-TEST_YEAR = datetime.datetime.now().year + 3
+TEST_FAVORITE_ENTRY_YEAR = datetime.datetime.now().year + 3
+TEST_FAIL_ID = 0
+TEST_UPDATE_ALBUM_NAME = "Updated Album Name"
 
-TEST_CREATE_FAVORITE = {
+TEST_CREATE_FAVORITE_ENTRY = {
     "songs": [
         {
             "songName": f"Test Song{i+1}",
@@ -16,5 +18,20 @@ TEST_CREATE_FAVORITE = {
         for i in range(13)
     ],
     "comment": "Test String",
-    "year": TEST_YEAR,
+    "year": TEST_FAVORITE_ENTRY_YEAR,
+}
+
+TEST_CREATE_BLOG_ENTRY = {
+    "albumName": "Test Album",
+    "artist": "Test Artist",
+    "genre": "Rock",
+    "review": "This album rocks",
+    "rating": 6,
+    "appleMusicLink": "test link",
+    "spotifyLink": "test link",
+    "releaseDate": "2025-11-21",
+    "albumArtPath": "test path",
+    "songs": [
+        {"songName": f"Test Song{i+1}", "songLength": "05:47:36"} for i in range(8)
+    ],
 }

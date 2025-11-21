@@ -1,18 +1,62 @@
+import pytest
 from fastapi.testclient import TestClient
+from sqlalchemy import delete
+from datetime import time
+
+from app.database import Base
+from tests.conftest import TestingSessionLocal, test_engine
+from app.models.music import FavoritesComment, FavoritesSong
 from fastapi import status
-from tests.constants import TEST_CREATE_FAVORITE, TEST_YEAR
+from tests.constants import TEST_CREATE_FAVORITE_ENTRY, TEST_FAVORITE_ENTRY_YEAR
+
+import pytest
+
+
+# Resets DB with test data before each test
+@pytest.fixture(autouse=True)
+def reset_test_favorite_entries():
+    with test_engine.begin() as conn:
+        for table in reversed(Base.metadata.sorted_tables):
+            conn.execute(delete(table))
+
+    session = TestingSessionLocal()
+    try:
+        favorite = FavoritesComment(
+            comment=TEST_CREATE_FAVORITE_ENTRY["comment"],
+            year=TEST_CREATE_FAVORITE_ENTRY["year"],
+        )
+        for s in TEST_CREATE_FAVORITE_ENTRY["songs"]:
+            # Convert string "HH:MM:SS" to datetime.time
+            h, m, sec = s["songLength"].split(":")
+            song = FavoritesSong(
+                song_name=s["songName"],
+                artist=s["artist"],
+                album=s["album"],
+                genre=s["genre"],
+                song_length=time(hour=int(h), minute=int(m), second=int(sec)),
+                apple_music_link=s["appleMusicLink"],
+                spotify_link=s["spotifyLink"],
+                year=TEST_CREATE_FAVORITE_ENTRY["year"],
+            )
+            favorite.songs.append(song)
+
+        session.add(favorite)
+        session.commit()
+        yield favorite
+    finally:
+        session.close()
 
 
 def test_create_favorite_songs(client: TestClient):
     response = client.post(
         "api/music/favorite-songs/new",
         json={
-            **TEST_CREATE_FAVORITE,
+            **TEST_CREATE_FAVORITE_ENTRY,
             "songs": [
                 {**song, "songName": song["songName"] + "New"}
-                for song in TEST_CREATE_FAVORITE["songs"]
+                for song in TEST_CREATE_FAVORITE_ENTRY["songs"]
             ],
-            "year": TEST_YEAR + 1,
+            "year": TEST_FAVORITE_ENTRY_YEAR + 1,
         },
     )
     assert response.status_code == status.HTTP_201_CREATED
@@ -22,12 +66,12 @@ def test_create_favorite_songs(client: TestClient):
 
 def test_fail_create_favorite_songs(client: TestClient):
     fail_test = {
-        **TEST_CREATE_FAVORITE,
+        **TEST_CREATE_FAVORITE_ENTRY,
         "songs": [
             {**song, "songName": song["songName"] + "New"}
-            for song in TEST_CREATE_FAVORITE["songs"]
+            for song in TEST_CREATE_FAVORITE_ENTRY["songs"]
         ],
-        "year": TEST_YEAR + 1,
+        "year": TEST_FAVORITE_ENTRY_YEAR + 1,
     }
     fail_test["songs"].pop()
     response = client.post("api/music/favorite-songs/new", json=fail_test)
@@ -48,7 +92,7 @@ def test_update_comment(client: TestClient):
     UPDATE_STRING = "This has been updated"
     TEST_UPDATE_FAVORITE = {"comment": UPDATE_STRING}
     response = client.put(
-        f"api/music/favorite-songs/comments/update/{TEST_YEAR}",
+        f"api/music/favorite-songs/comments/update/{TEST_FAVORITE_ENTRY_YEAR}",
         json=TEST_UPDATE_FAVORITE,
     )
     assert response.status_code == status.HTTP_200_OK
@@ -59,21 +103,27 @@ def test_update_comment(client: TestClient):
 def test_fail_update_comment(client: TestClient):
     TEST_UPDATE_FAVORITE = {"comment": "New Test"}
     response = client.put(
-        f"api/music/favorite-songs/comments/update/{TEST_YEAR + 1}",
+        f"api/music/favorite-songs/comments/update/{TEST_FAVORITE_ENTRY_YEAR + 1}",
         json=TEST_UPDATE_FAVORITE,
     )
     assert response.status_code == status.HTTP_404_NOT_FOUND
 
 
 def test_delete_comment(client: TestClient):
-    response = client.delete(f"api/music/favorite-songs/delete/{TEST_YEAR}")
+    response = client.delete(
+        f"api/music/favorite-songs/delete/{TEST_FAVORITE_ENTRY_YEAR}"
+    )
     assert response.status_code == status.HTTP_204_NO_CONTENT
 
     # Ensure year is gone from list
     data = client.get("api/music/favorite-songs").json()
-    assert all(entry["year"] != TEST_YEAR for entry in data)
+    assert not any(data) or all(
+        entry["year"] != TEST_FAVORITE_ENTRY_YEAR for entry in data
+    )
 
 
 def test_fail_delete_comment(client: TestClient):
-    response = client.delete(f"api/music/favorite-songs/delete/{TEST_YEAR + 1}")
+    response = client.delete(
+        f"api/music/favorite-songs/delete/{TEST_FAVORITE_ENTRY_YEAR + 1}"
+    )
     assert response.status_code == status.HTTP_404_NOT_FOUND

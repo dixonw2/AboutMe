@@ -22,3 +22,5 @@ from .blog.album import AlbumCreate as BlogAlbumCreate
 from .blog.album import AlbumWithSongsRead as BlogAlbumWithSongsRead
 from .blog.song import SongRead as BlogSongRead
 from .blog.song import SongCreate as BlogSongCreate
+from .blog.album import AlbumWithSongsCreate as BlogAlbumWithSongsCreate
+from .blog.album import AlbumWithSongsUpdate as BlogAlbumWithSongsUpdate
