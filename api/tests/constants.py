@@ -2,7 +2,6 @@ import datetime
 
 TEST_FAVORITE_ENTRY_YEAR = datetime.datetime.now().year + 3
 TEST_FAIL_ID = 0
-TEST_UPDATE_ALBUM_NAME = "Updated Album Name"
 
 TEST_CREATE_FAVORITE_ENTRY = {
     "songs": [

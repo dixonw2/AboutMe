@@ -25,3 +25,5 @@ dist-ssr
 
 __pycache__
 api/app/schemas/sql/TestingCompleteWipe.sql
+.pytest_cache
+.coverage
