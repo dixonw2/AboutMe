@@ -9,10 +9,6 @@ from app.models.music import BlogAlbum, BlogAlbumSong
 from fastapi import status
 from tests.constants import TEST_CREATE_BLOG_ENTRY, TEST_FAIL_ID
 
-from unittest.mock import MagicMock
-from sqlalchemy.exc import SQLAlchemyError
-
-
 @pytest.fixture(autouse=True)
 def reset_test_blog():
     tables_to_reset = [BlogAlbumSong.__table__, BlogAlbum.__table__]
