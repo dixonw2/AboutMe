@@ -7,7 +7,10 @@ from app.database import Base
 from tests.conftest import TestingSessionLocal, test_engine
 from app.models.music import BlogAlbum, BlogAlbumSong
 from fastapi import status
-from tests.constants import TEST_CREATE_BLOG_ENTRY, TEST_FAIL_ID, TEST_UPDATE_ALBUM_NAME
+from tests.constants import TEST_CREATE_BLOG_ENTRY, TEST_FAIL_ID
+
+from unittest.mock import MagicMock
+from sqlalchemy.exc import SQLAlchemyError
 
 
 @pytest.fixture(autouse=True)
@@ -53,35 +56,59 @@ def test_create_blog(client: TestClient):
     )
     assert response.status_code == status.HTTP_201_CREATED
     data = response.json()
-    assert all(song["id"] > 0 for song in data["songs"])
+    assert len(data["songs"]) > 0
+    assert data["albumName"] == "New Album"
 
 
-def test_fail_create_blog(client: TestClient):
+def test_fail_create_blog_empty_songs(client: TestClient):
     data = {**TEST_CREATE_BLOG_ENTRY, "songs": []}
     response = client.post("api/music/blog/albums/new", json=data)
     assert response.status_code == status.HTTP_400_BAD_REQUEST
     assert response.json()["detail"] == "Songs cannot be empty"
 
 
+def test_fail_create_blog_duplicate(client: TestClient):
+    response = client.post("api/music/blog/albums/new", json={**TEST_CREATE_BLOG_ENTRY})
+    assert response.status_code == status.HTTP_400_BAD_REQUEST
+    assert (
+        response.json()["detail"]
+        == f"Could not insert album {TEST_CREATE_BLOG_ENTRY["albumName"]}"
+    )
+
+
 def test_get_blog(client: TestClient):
-    response = client.get("api/music/blog/albums")
+    response = client.get("api/music/blog")
     assert response.status_code == status.HTTP_200_OK
+    assert any(response.json())
 
 
 def test_update_blog(client: TestClient):
-    data = client.get("api/music/blog/albums").json()[0]
-    update_data = {**data, "albumName": TEST_UPDATE_ALBUM_NAME}
-    response = client.put(
+    data = client.get("api/music/blog").json()[0]
+    assert len(data["songs"]) == 8
+
+    update_data = {
+        "albumName": "Update Album Name",
+        "songs": [
+            {"songName": f"Update Song {i + 1}", "songLength": "04:20:00"}
+            for i in range(13)
+        ],
+    }
+    response = client.patch(
         f"api/music/blog/albums/update/{data["id"]}", json=update_data
     )
     assert response.status_code == status.HTTP_200_OK
-    assert response.json()["albumName"] == TEST_UPDATE_ALBUM_NAME
+    assert len(response.json()["songs"]) == 13
+    assert all(
+        song["songName"] == f"Update Song {i + 1}"
+        for i, song in enumerate(response.json()["songs"])
+    )
+    assert response.json()["albumName"] == "Update Album Name"
 
 
 def test_fail_update_blog(client: TestClient):
-    data = client.get("api/music/blog/albums").json()[0]
-    update_data = {**data, "albumName": TEST_UPDATE_ALBUM_NAME}
-    response = client.put(
+    data = client.get("api/music/blog").json()[0]
+    update_data = {"albumName": "Update Album Name"}
+    response = client.patch(
         f"api/music/blog/albums/update/{TEST_FAIL_ID}", json=update_data
     )
     assert response.status_code == status.HTTP_404_NOT_FOUND
@@ -89,14 +116,14 @@ def test_fail_update_blog(client: TestClient):
 
 
 def test_delete_album(client: TestClient):
-    blog_id = client.get("api/music/blog/albums").json()[0]["id"]
+    blog_id = client.get("api/music/blog").json()[0]["id"]
     response = client.delete(f"api/music/blog/albums/delete/{blog_id}")
     assert response.status_code == status.HTTP_204_NO_CONTENT
-    data = client.get("api/music/blog/albums").json()
+    data = client.get("api/music/blog").json()
     assert not any(data) or all(album["id"] != blog_id for album in data)
 
 
-def test_fail_delete_album(client: TestClient):
+def test_fail_delete_album_not_found(client: TestClient):
     response = client.delete(f"api/music/blog/albums/delete/{TEST_FAIL_ID}")
     assert response.status_code == status.HTTP_404_NOT_FOUND
     assert response.json()["detail"].startswith("Album not found with id")
