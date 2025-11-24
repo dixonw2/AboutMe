@@ -68,7 +68,7 @@ def test_fail_create_blog_empty_songs(client: TestClient):
 
 
 def test_fail_create_blog_duplicate(client: TestClient):
-    response = client.post("api/music/blog/albums/new", json={**TEST_CREATE_BLOG_ENTRY})
+    response = client.post("api/music/blog/albums/new", json=TEST_CREATE_BLOG_ENTRY)
     assert response.status_code == status.HTTP_400_BAD_REQUEST
     assert (
         response.json()["detail"]
