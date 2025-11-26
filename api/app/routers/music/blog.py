@@ -3,12 +3,10 @@ from sqlalchemy import select
 from sqlalchemy.orm import Session
 from sqlalchemy.exc import SQLAlchemyError
 from typing import List
-import datetime
 
 from app.schemas.music import AlbumCreate, AlbumRead, AlbumUpdate
 from app.models.music import BlogAlbum, BlogAlbumSong
 from app.database import get_db
-from app.schemas.about_me_model import AboutMeModel
 
 router = APIRouter(prefix="/music/blog", tags=["music blog"])
 

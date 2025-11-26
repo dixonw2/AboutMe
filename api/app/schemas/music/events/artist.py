@@ -1,5 +1,4 @@
 from app.schemas import AboutMeModel
-from typing import List
 
 
 class ArtistBase(AboutMeModel):

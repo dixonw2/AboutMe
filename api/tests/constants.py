@@ -1,8 +1,10 @@
 import datetime
 
-TEST_FAVORITE_ENTRY_YEAR = datetime.datetime.now().year + 3
+
 TEST_FAIL_ID = 0
 
+# region Favorites
+TEST_FAVORITE_ENTRY_YEAR = datetime.datetime.now().year + 3
 TEST_CREATE_FAVORITE_ENTRY = {
     "songs": [
         {
@@ -19,7 +21,9 @@ TEST_CREATE_FAVORITE_ENTRY = {
     "comment": "Test String",
     "year": TEST_FAVORITE_ENTRY_YEAR,
 }
+# endregion
 
+# region Blog
 TEST_CREATE_BLOG_ENTRY = {
     "albumName": "Test Album",
     "artist": "Test Artist",
@@ -34,7 +38,9 @@ TEST_CREATE_BLOG_ENTRY = {
         {"songName": f"Test Song{i+1}", "songLength": "05:47:36"} for i in range(8)
     ],
 }
+# endregion
 
+# region Events
 TEST_CREATE_EVENT_ENTRY = {
     "eventName": "Test Event",
     "headliner": "Test Headliner",
@@ -42,3 +48,4 @@ TEST_CREATE_EVENT_ENTRY = {
     "venue": "Test Venue",
     "artists": [f"Test Artist {i + 1}" for i in range(5)],
 }
+# endregion

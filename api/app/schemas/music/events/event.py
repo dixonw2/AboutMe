@@ -1,6 +1,5 @@
 from app.schemas import AboutMeModel
 import datetime
-from typing import List
 
 
 class EventBase(AboutMeModel):
