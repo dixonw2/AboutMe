@@ -102,7 +102,6 @@ def test_update_blog(client: TestClient):
 
 
 def test_fail_update_blog(client: TestClient):
-    data = client.get("api/music/blog").json()[0]
     update_data = {"albumName": "Update Album Name"}
     response = client.patch(
         f"api/music/blog/albums/update/{TEST_FAIL_ID}", json=update_data
