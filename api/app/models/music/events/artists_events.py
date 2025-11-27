@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, ForeignKey
+from sqlalchemy import Column, Integer, ForeignKey, UniqueConstraint
 from sqlalchemy.orm import relationship
 from app.database import Base
 
@@ -8,10 +8,19 @@ class ArtistsEvents(Base):
     __table_args__ = {"schema": "Music"}
 
     artist_id = Column(
-        "IdArtist", Integer, ForeignKey("Music.Artists.id"), primary_key=True
+        "IdArtist",
+        Integer,
+        ForeignKey("Music.Artists.id", ondelete="CASCADE"),
+        nullable=False,
+        primary_key=True,
     )
+
     event_id = Column(
-        "IdEvent", Integer, ForeignKey("Music.Events.id"), primary_key=True
+        "IdEvent",
+        Integer,
+        ForeignKey("Music.Events.id", ondelete="CASCADE"),
+        nullable=False,
+        primary_key=True,
     )
     set_order = Column("SetOrder", Integer, nullable=False)
 

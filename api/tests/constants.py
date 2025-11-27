@@ -4,19 +4,19 @@ import datetime
 TEST_FAIL_ID = 0
 
 # region Favorites
-TEST_FAVORITE_ENTRY_YEAR = datetime.datetime.now().year + 3
+TEST_FAVORITE_ENTRY_YEAR = datetime.datetime.now().year + 1
+TEST_FAVORITE_NEW_SONG = {
+    "songName": "Test Song",
+    "artist": "Test Artist",
+    "album": "Test Album",
+    "genre": "Rock",
+    "songLength": "00:04:05",
+    "appleMusicLink": "test link",
+    "spotifyLink": "test link",
+}
 TEST_CREATE_FAVORITE_ENTRY = {
     "songs": [
-        {
-            "songName": f"Test Song{i+1}",
-            "artist": "Test Artist",
-            "album": "Test Album",
-            "genre": "Rock",
-            "songLength": "00:04:05",
-            "appleMusicLink": "test link",
-            "spotifyLink": "test link",
-        }
-        for i in range(13)
+        {**TEST_FAVORITE_NEW_SONG, "songName": f"Test Song {i + 1}"} for i in range(13)
     ],
     "comment": "Test String",
     "year": TEST_FAVORITE_ENTRY_YEAR,

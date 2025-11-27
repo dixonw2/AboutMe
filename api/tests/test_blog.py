@@ -3,11 +3,11 @@ from fastapi.testclient import TestClient
 from sqlalchemy import delete
 from datetime import time
 
-from app.database import Base
 from tests.conftest import TestingSessionLocal, test_engine
 from app.models.music import BlogAlbum, BlogAlbumSong
 from fastapi import status
 from tests.constants import TEST_CREATE_BLOG_ENTRY, TEST_FAIL_ID
+
 
 @pytest.fixture(autouse=True)
 def reset_test_blog():
@@ -115,7 +115,7 @@ def test_delete_album(client: TestClient):
     response = client.delete(f"api/music/blog/albums/delete/{blog_id}")
     assert response.status_code == status.HTTP_204_NO_CONTENT
     data = client.get("api/music/blog").json()
-    assert not any(data) or all(album["id"] != blog_id for album in data)
+    assert not any(data)
 
 
 def test_fail_delete_album_not_found(client: TestClient):

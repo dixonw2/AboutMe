@@ -105,7 +105,7 @@ IF NOT EXISTS (SELECT * FROM sys.tables WHERE [name] = 'Artists' AND [schema_id]
 BEGIN
 	CREATE TABLE Music.Artists (
 		Id INT IDENTITY(1,1) PRIMARY KEY,
-		Artist NVARCHAR(64) NOT NULL
+		Artist NVARCHAR(64) NOT NULL UNIQUE
 	);
 END
 
@@ -543,9 +543,9 @@ BEGIN
 		IdArtist INT NOT NULL,
 		IdEvent INT NOT NULL,
 		SetOrder INT NOT NULL,
-		PRIMARY KEY (IdArtist, IdEvent),
-		CONSTRAINT FK_Artist FOREIGN KEY (IdArtist) REFERENCES Music.Artists(Id),
-		CONSTRAINT FK_Event FOREIGN KEY (IdEvent) REFERENCES Music.Events(Id)
+		CONSTRAINT PK_ArtistsEvents PRIMARY KEY(IdArtist, IdEvent),
+		CONSTRAINT FK_Artist FOREIGN KEY (IdArtist) REFERENCES Music.Artists(Id) ON DELETE CASCADE,
+		CONSTRAINT FK_Event FOREIGN KEY (IdEvent) REFERENCES Music.Events(Id) ON DELETE CASCADE,
 	);
 END
 
