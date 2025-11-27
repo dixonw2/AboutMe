@@ -18,3 +18,13 @@ class SongCreate(SongBase):
 
 class SongRead(SongBase):
     id: int
+
+
+class SongUpdate(SongBase):
+    song_name: str | None = None
+    artist: str | None = None
+    album: str | None = None
+    genre: str | None = None
+    song_length: datetime.time | None = None
+    apple_music_link: str | None = None
+    spotify_link: str | None = None

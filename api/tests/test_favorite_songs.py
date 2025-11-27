@@ -7,7 +7,11 @@ from app.database import Base
 from tests.conftest import TestingSessionLocal, test_engine
 from app.models.music import FavoritesComment, FavoritesSong
 from fastapi import status
-from tests.constants import TEST_CREATE_FAVORITE_ENTRY, TEST_FAVORITE_ENTRY_YEAR
+from tests.constants import (
+    TEST_CREATE_FAVORITE_ENTRY,
+    TEST_FAVORITE_ENTRY_YEAR,
+    TEST_FAVORITE_NEW_SONG,
+)
 
 import pytest
 
@@ -60,12 +64,11 @@ def test_create_favorite_songs(client: TestClient):
         },
     )
     assert response.status_code == status.HTTP_201_CREATED
-    data = response.json()
-    assert all(song["id"] > 0 for song in data["songs"])
+    assert all(song["id"] > 0 for song in response.json()["songs"])
 
 
 def test_fail_create_favorite_songs(client: TestClient):
-    fail_test = {
+    test_fail = {
         **TEST_CREATE_FAVORITE_ENTRY,
         "songs": [
             {**song, "songName": song["songName"] + "New"}
@@ -73,25 +76,42 @@ def test_fail_create_favorite_songs(client: TestClient):
         ],
         "year": TEST_FAVORITE_ENTRY_YEAR + 1,
     }
-    fail_test["songs"].pop()
-    response = client.post("api/music/favorite-songs/new", json=fail_test)
+    test_fail["songs"].pop()
+    response = client.post("api/music/favorite-songs/new", json=test_fail)
     assert response.status_code == status.HTTP_400_BAD_REQUEST
-    assert response.json()["detail"].startswith("Needs exactly 13 songs")
+    assert (
+        response.json()["detail"]
+        == f"Needs exactly 13 songs (currently {len(test_fail["songs"])})"
+    )
+
+
+def test_fail_create_favorite_songs_duplicate(client: TestClient):
+    response = client.post(
+        "api/music/favorite-songs/new", json={**TEST_CREATE_FAVORITE_ENTRY}
+    )
+    assert response.status_code == status.HTTP_400_BAD_REQUEST
+    assert (
+        response.json()["detail"]
+        == f"Could not add new list for year {TEST_CREATE_FAVORITE_ENTRY["year"]}"
+    )
 
 
 def test_get_favorite_songs(client: TestClient):
     response = client.get("api/music/favorite-songs")
     assert response.status_code == status.HTTP_200_OK
-    data = response.json()
-
-    # All song lists must be 13 songs long
-    assert len(data[0]["songs"]) == 13
+    assert len(response.json()[0]["songs"]) == 13
 
 
 def test_update_comment(client: TestClient):
     UPDATE_STRING = "This has been updated"
-    TEST_UPDATE_FAVORITE = {"comment": UPDATE_STRING}
-    response = client.put(
+    TEST_UPDATE_FAVORITE = {
+        "comment": UPDATE_STRING,
+        "songs": [
+            {**song, "songName": f"Update Song {i + 1}"}
+            for i, song in enumerate(TEST_CREATE_FAVORITE_ENTRY["songs"])
+        ],
+    }
+    response = client.patch(
         f"api/music/favorite-songs/comments/update/{TEST_FAVORITE_ENTRY_YEAR}",
         json=TEST_UPDATE_FAVORITE,
     )
@@ -101,12 +121,28 @@ def test_update_comment(client: TestClient):
 
 
 def test_fail_update_comment(client: TestClient):
-    TEST_UPDATE_FAVORITE = {"comment": "New Test"}
-    response = client.put(
+    update_data = {"comment": "Update Test"}
+    response = client.patch(
         f"api/music/favorite-songs/comments/update/{TEST_FAVORITE_ENTRY_YEAR + 1}",
-        json=TEST_UPDATE_FAVORITE,
+        json=update_data,
     )
     assert response.status_code == status.HTTP_404_NOT_FOUND
+
+
+def test_fail_update_comment_not_enough_songs(client: TestClient):
+    TEST_UPDATE_FAVORITE_SONGS = [
+        {**TEST_FAVORITE_NEW_SONG, "songName": f"Update Song {i + 1}"}
+        for i in range(12)
+    ]
+    response = client.patch(
+        f"api/music/favorite-songs/comments/update/{TEST_FAVORITE_ENTRY_YEAR}",
+        json={"songs": TEST_UPDATE_FAVORITE_SONGS},
+    )
+    assert response.status_code == status.HTTP_400_BAD_REQUEST
+    assert (
+        response.json()["detail"]
+        == f"Needs exactly 13 songs (currently {len(TEST_UPDATE_FAVORITE_SONGS)})"
+    )
 
 
 def test_delete_comment(client: TestClient):
@@ -115,7 +151,6 @@ def test_delete_comment(client: TestClient):
     )
     assert response.status_code == status.HTTP_204_NO_CONTENT
 
-    # Ensure year is gone from list
     data = client.get("api/music/favorite-songs").json()
     assert not any(data) or all(
         entry["year"] != TEST_FAVORITE_ENTRY_YEAR for entry in data

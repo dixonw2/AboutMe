@@ -80,7 +80,9 @@ async def update_album_entry(
         setattr(update_album, key, value)
 
     if album.songs is not None:
-        db.query(BlogAlbumSong).filter(BlogAlbumSong.id_blog_albums == id).delete()
+        db.query(BlogAlbumSong).filter(BlogAlbumSong.id_blog_albums == id).delete(
+            synchronize_session=False
+        )
         for song in album.songs:
             db.add(BlogAlbumSong(id_blog_albums=id, **song.model_dump()))
 

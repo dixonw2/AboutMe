@@ -6,7 +6,7 @@ from sqlalchemy.orm import sessionmaker
 import sys
 import os
 
-# Add api/ folder to Python path so 'app' can be imported
+# Add api/ folder app can be imported
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
 from app.main import app
@@ -26,7 +26,6 @@ def override_get_db():
         db.close()
 
 
-# Override FastAPI's default DB dependency
 app.dependency_overrides[get_db] = override_get_db
 
 

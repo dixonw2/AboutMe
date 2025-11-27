@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Depends, status, HTTPException
 from sqlalchemy import select
 from sqlalchemy.orm import Session, selectinload
+from sqlalchemy.exc import SQLAlchemyError
 from typing import List
 
 from app.schemas.music import (
@@ -73,37 +74,47 @@ async def get_artists(db: Session = Depends(get_db)):
     description="Create new event",
 )
 async def post_event(event: EventWithArtistsCreate, db: Session = Depends(get_db)):
-    new_event = Event(
-        event_name=event.event_name,
-        headliner=event.headliner,
-        date=event.date,
-        venue=event.venue,
-    )
-    db.add(new_event)
-    db.flush()
-
-    for index, artist_name in enumerate(event.artists):
-        artist = db.query(Artist).filter(Artist.artist == artist_name).first()
-        if not artist:
-            artist = Artist(artist=artist_name)
-            db.add(artist)
-            db.flush()
-
-        ae = ArtistsEvents(
-            artist_id=artist.id, event_id=new_event.id, set_order=index + 1
+    try:
+        new_event = Event(
+            event_name=event.event_name,
+            headliner=event.headliner,
+            date=event.date,
+            venue=event.venue,
         )
-        db.add(ae)
+        db.add(new_event)
+        db.flush()
 
-    db.commit()
+        for index, artist_name in enumerate(event.artists):
+            artist = db.query(Artist).filter(Artist.artist == artist_name).first()
+            if not artist:
+                artist = Artist(artist=artist_name)
+                db.add(artist)
+                db.flush()
 
-    new_event = (
-        db.query(Event)
-        .options(selectinload(Event.artists_events).selectinload(ArtistsEvents.artist))
-        .filter(Event.id == new_event.id)
-        .one()
-    )
+            ae = ArtistsEvents(
+                artist_id=artist.id, event_id=new_event.id, set_order=index + 1
+            )
+            db.add(ae)
 
-    sorted_ae = sorted(new_event.artists_events, key=lambda x: x.set_order)
+        db.commit()
+
+        new_event = (
+            db.query(Event)
+            .options(
+                selectinload(Event.artists_events).selectinload(ArtistsEvents.artist)
+            )
+            .filter(Event.id == new_event.id)
+            .one()
+        )
+
+        sorted_ae = sorted(new_event.artists_events, key=lambda x: x.set_order)
+
+    except SQLAlchemyError:
+        db.rollback()
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=f"Could not add event {event.event_name}",
+        )
 
     return EventWithArtistsRead(
         id=new_event.id,
@@ -170,3 +181,17 @@ async def update_event_entry(
         venue=update_event.venue,
         artists=artists,
     )
+
+
+@router.delete(
+    "/delete/{id}", status_code=status.HTTP_204_NO_CONTENT, description="Delete event"
+)
+async def delete_event(id: int, db: Session = Depends(get_db)):
+    event = db.get(Event, id)
+    if not event:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail=f"Event not found for id {id}"
+        )
+
+    db.delete(event)
+    db.commit()

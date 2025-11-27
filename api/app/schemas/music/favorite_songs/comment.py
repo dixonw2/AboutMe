@@ -1,7 +1,7 @@
 from typing import List
 from app.schemas import AboutMeModel
 import datetime
-from .song import SongRead, SongCreate
+from .song import SongRead, SongCreate, SongUpdate
 
 
 class CommentBase(AboutMeModel):
@@ -16,6 +16,8 @@ class CommentRead(CommentBase):
     year: int
     date_created: datetime.datetime
     date_updated: datetime.datetime | None = None
+
+    songs: List[SongCreate]
 
 
 class CommentWithSongsBase(CommentRead):
@@ -32,4 +34,5 @@ class CommentWithSongsCreate(CommentBase):
 
 
 class CommentUpdate(CommentBase):
-    pass
+    comment: str | None = None
+    songs: List[SongUpdate] | None = None

@@ -4,11 +4,9 @@ from sqlalchemy.orm import Session
 from sqlalchemy.exc import SQLAlchemyError
 from typing import List
 
-from app.schemas.music import SongCreate
 from app.models.music import FavoritesSong
 from app.schemas.music import (
     CommentRead,
-    CommentCreate,
     CommentUpdate,
     CommentWithSongsRead,
     CommentWithSongsCreate,
@@ -18,47 +16,6 @@ from app.models.music import FavoritesComment
 from app.database import get_db
 
 router = APIRouter(prefix="/music/favorite-songs", tags=["favorite songs"])
-
-
-@router.get(
-    "/",
-    response_model=List[CommentWithSongsRead],
-    description="Get favorites for every year",
-)
-async def get_favorites(db: Session = Depends(get_db)):
-    return db.scalars(select(FavoritesComment)).all()
-
-
-# TODO: Allow for more than just comment?
-@router.put(
-    "/comments/update/{year}",
-    response_model=CommentRead,
-    description="Update comment for given year",
-)
-async def update_comment(
-    year: int, comment: CommentUpdate, db: Session = Depends(get_db)
-):
-    try:
-        update_comment = db.scalar(
-            select(FavoritesComment).where(FavoritesComment.year == year)
-        )
-        if not update_comment:
-            raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND,
-                detail=f"Comment for year {year} not found",
-            )
-
-        update_comment.comment = comment.comment
-        db.commit()
-    except SQLAlchemyError:
-        db.rollback()
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail=f"Could not update comment for year {year}",
-        )
-
-    db.refresh(update_comment)
-    return update_comment
 
 
 @router.post(
@@ -99,6 +56,55 @@ async def post_yearly_entry(
     return new_comment
 
 
+@router.get(
+    "/",
+    response_model=List[CommentWithSongsRead],
+    description="Get favorites for every year",
+)
+async def get_favorites(db: Session = Depends(get_db)):
+    return db.scalars(select(FavoritesComment)).all()
+
+
+@router.patch(
+    "/comments/update/{year}",
+    response_model=CommentRead,
+    description="Update comment for year",
+)
+async def update_comment(
+    year: int, entry: CommentUpdate, db: Session = Depends(get_db)
+):
+    update_comment = db.scalar(
+        select(FavoritesComment).where(FavoritesComment.year == year)
+    )
+    if not update_comment:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"Comment for year {year} not found",
+        )
+
+    update_comment.comment = (
+        entry.comment if entry.comment is not None else update_comment.comment
+    )
+
+    if entry.songs is not None:
+        if len(entry.songs) != 13:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail=f"Needs exactly 13 songs (currently {len(entry.songs)})",
+            )
+        db.query(FavoritesSong).filter(FavoritesSong.year == year).delete(
+            synchronize_session=False
+        )
+
+        for song in entry.songs:
+            pass
+
+    db.commit()
+
+    db.refresh(update_comment)
+    return update_comment
+
+
 @router.delete(
     "/delete/{year}",
     status_code=status.HTTP_204_NO_CONTENT,
@@ -112,12 +118,5 @@ async def delete_yearly_entry(year: int, db: Session = Depends(get_db)):
             detail=f"Entry not found for year {year}",
         )
 
-    try:
-        db.delete(entry)
-        db.commit()
-    except SQLAlchemyError:
-        db.rollback()
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail=f"Could not delete entry for year {year}",
-        )
+    db.delete(entry)
+    db.commit()
