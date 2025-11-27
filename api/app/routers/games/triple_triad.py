@@ -1,8 +1,8 @@
-from fastapi import APIRouter, Depends, Query, HTTPException
+from fastapi import APIRouter, Depends, Query
 import random
 from typing import List
 from sqlalchemy.orm import Session
-from sqlalchemy import func, select
+from sqlalchemy import select
 from app.database import get_db
 
 from app.schemas.games.triple_triad_card import TripleTriadCardRead
@@ -11,7 +11,6 @@ from app.models.games.triple_triad_card import TripleTriadCard
 router = APIRouter(prefix="/games/triple-triad", tags=["triple triad"])
 
 
-# region Endpoints
 @router.get(
     "/cards",
     response_model=List[TripleTriadCardRead],
@@ -31,10 +30,11 @@ async def get_triple_triad_cards(
     if level is not None:
         query = query.where(TripleTriadCard.level == level)
     if element is not None:
-        if element == "none":
-            query = query.where(TripleTriadCard.element.is_(None))
-        else:
+        if element:
             query = query.where(TripleTriadCard.element == element)
+        else:
+            query = query.where(TripleTriadCard.element.is_(None))
+
     return db.execute(query).scalars().all()
 
 
@@ -80,16 +80,11 @@ async def get_triple_triad_hand(
     return hand[-5:]
 
 
-# endregion
-# region Helper Functions
 def get_random_cards(
     cards: List[TripleTriadCard], count: int, weighted: bool
 ) -> List[TripleTriadCard]:
 
-    if count > len(cards):
-        count = len(cards)
-
-    # Weighted selection helper
+    # Weighted selection
     def get_weight(card: TripleTriadCard) -> float:
         level = card.level
         if level in [1, 2]:
@@ -102,11 +97,6 @@ def get_random_cards(
             return 2
         elif level in [9, 10]:
             return 1
-        else:
-            raise HTTPException(
-                status_code=400,
-                detail=f"Card {card.card_name} has an invalid level: {level}",
-            )
 
     if weighted:
         population = cards[:]
@@ -126,9 +116,6 @@ def get_random_cards(
     return selected_cards
 
 
-# endregion
-
-
-# Should all logic be in here for even the "wave" kind of thing I just thought of where you start with bad cards and get better ones as you win?
+# Should all logic be in here for even the "wave" (Gauntlet?) kind of thing I just thought of where you start with bad cards and get better ones as you win?
 # Can steal ante cards so you start with a tier 8 or something and so does the opponent (or maybe a level lower?)
 # Tbh just adding this to remind myself of this idea
