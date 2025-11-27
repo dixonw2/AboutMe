@@ -1,15 +1,14 @@
-import pytest
 from fastapi.testclient import TestClient
 from fastapi import status
 
-TEST_TRIPLE_TRIAD_LIST = 110
+TEST_TRIPLE_TRIAD_LIST_COUNT = 110
 
 
-# cards is static data
+# cards is static data, so no need to refresh the database with new data every time
 def test_get_cards(client: TestClient):
     response = client.get("api/games/triple-triad/cards")
     assert response.status_code == status.HTTP_200_OK
-    assert len(response.json()) == TEST_TRIPLE_TRIAD_LIST
+    assert len(response.json()) == TEST_TRIPLE_TRIAD_LIST_COUNT
 
 
 def test_get_cards_of_level(client: TestClient):
