@@ -189,10 +189,11 @@ const NewYear = ({ onCreate }: { onCreate: (year: Year) => void }) => {
       body: newYear,
     });
 
-    const data: Year = await response.json();
-    onCreate(data);
-    setSongs([]);
-    setComment("");
+    if (response.ok) {
+      const data: Year = await response.json();
+      onCreate(data);
+      setSongs([]);
+      setComment("");
   };
 
   return (
