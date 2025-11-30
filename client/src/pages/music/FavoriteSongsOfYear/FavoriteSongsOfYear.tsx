@@ -194,6 +194,7 @@ const NewYear = ({ onCreate }: { onCreate: (year: Year) => void }) => {
       onCreate(data);
       setSongs([]);
       setComment("");
+    }
   };
 
   return (
