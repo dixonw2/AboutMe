@@ -26,6 +26,7 @@
 
 .comment {
   padding: 0 4rem;
+  white-space: pre-wrap;
 }
 
 .button {
