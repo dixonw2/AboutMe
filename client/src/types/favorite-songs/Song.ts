@@ -6,5 +6,4 @@ export default interface Song {
   songLength: string;
   appleMusicLink: string;
   spotifyLink: string;
-  year: number;
 }

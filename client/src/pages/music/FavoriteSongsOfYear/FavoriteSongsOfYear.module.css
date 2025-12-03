@@ -12,11 +12,27 @@
   width: 100%;
 }
 
-.yearHeader {
-  font-size: 50px;
+.year-header {
+  font-size: 60px;
+  color: white;
+  text-align: right;
+}
+
+.year-subheader {
+  font-weight: normal;
   color: lightgray;
+  text-align: right;
 }
 
 .comment {
   padding: 0 4rem;
+  white-space: pre-wrap;
+}
+
+.button {
+  background-color: gray;
+}
+
+.button-selected {
+  background-color: green;
 }

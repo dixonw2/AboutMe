@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 //import "./App.css";
-import SongsTable from "./music/favorite-songs/SongsTable";
-import Comment from "./music/favorite-songs/Comment";
+import SongsTable from "../pages/music/FavoriteSongsOfYear/components/SongsTable";
+import Comment from "../pages/music/FavoriteSongsOfYear/components/Comment";
 
 import type Song from "@/types/favorite-songs/Song";
 import type Year from "@/types/favorite-songs/Year";
