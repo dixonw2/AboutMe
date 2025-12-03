@@ -1,7 +1,7 @@
-import type EventArtists from "@/types/EventArtists";
+import type { EventWithArtists } from "@/types/events/Event";
 import Event from "./Event";
 
-const Events = ({ events }: { events: EventArtists[] }) => {
+const EventsList = ({ events }: { events: EventWithArtists[] }) => {
   const sortedEvents = events.sort(
     (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
   );
@@ -15,4 +15,4 @@ const Events = ({ events }: { events: EventArtists[] }) => {
   );
 };
 
-export default Events;
+export default EventsList;

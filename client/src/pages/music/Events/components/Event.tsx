@@ -1,12 +1,12 @@
 import { useState } from "react";
-import type EventArtists from "@/types/EventArtists";
+import type { EventWithArtists } from "@/types/events/Event";
 import "./Event.css";
 
-const Event = ({ event }: { event: EventArtists }) => {
+const Event = ({ event }: { event: EventWithArtists }) => {
   const [showArtists, setShowArtists] = useState(false);
 
   const getSeason = (date: string) => {
-    // zero based
+    // getMonth() is zero based
     const month = new Date(date).getMonth() + 1;
 
     if ([12, 1, 2].includes(month)) return "Winter";
