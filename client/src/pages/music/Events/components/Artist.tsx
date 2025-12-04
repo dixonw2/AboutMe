@@ -10,7 +10,7 @@ const Artist = ({ artist }: { artist: ArtistWithEvents }) => {
 
   return (
     <div
-      className={styles["artist-container"]}
+      className={styles["event-container"]}
       onClick={() => setShowEvents((event) => !event)}
     >
       <h2>
