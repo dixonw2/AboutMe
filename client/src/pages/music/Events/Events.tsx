@@ -45,11 +45,11 @@ const Events = () => {
         <em>Loading...</em>
       ) : (
         <div>
-          <Button selected={showArtists} onClick={handleSelectArtists}>
-            Artists
-          </Button>
           <Button selected={!showArtists} onClick={handleSelectEvents}>
             Events
+          </Button>
+          <Button selected={showArtists} onClick={handleSelectArtists}>
+            Artists
           </Button>
           {showArtists ? (
             <ArtistsList artists={artists} />

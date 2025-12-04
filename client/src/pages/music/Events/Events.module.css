@@ -21,12 +21,3 @@
 .event-container ul {
   list-style: none;
 }
-
-.artist-container {
-  border: 2px solid black;
-}
-
-.artist-container:hover {
-  cursor: pointer;
-  background-color: gray;
-}
