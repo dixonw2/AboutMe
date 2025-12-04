@@ -16,4 +16,9 @@ const convertToTime = (time: string) => {
     .padStart(2, "0")}`;
 };
 
-export { formatDate, convertToTime };
+const convertToDate = (date: string) => {
+  // force timezone to have accurate date
+  return new Date(`${date}T00:00:00`).toLocaleDateString();
+};
+
+export { formatDate, convertToTime, convertToDate };

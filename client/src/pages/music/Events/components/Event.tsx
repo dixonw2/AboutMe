@@ -1,40 +1,21 @@
 import { useState } from "react";
 import type { EventWithArtists } from "@/types/events/Event";
-import "./Event.css";
+import { getEventName } from "@/utils/event";
+import styles from "../Events.module.css";
+import { convertToDate } from "@/utils/date-time";
 
 const Event = ({ event }: { event: EventWithArtists }) => {
   const [showArtists, setShowArtists] = useState(false);
-
-  const getSeason = (date: string) => {
-    // getMonth() is zero based
-    const month = new Date(date).getMonth() + 1;
-
-    if ([12, 1, 2].includes(month)) return "Winter";
-    if ([3, 4, 5].includes(month)) return "Spring";
-    if ([6, 7, 8].includes(month)) return "Summer";
-    if ([9, 10, 11].includes(month)) return "Fall";
-    return "Donde Esta El Montho?";
-  };
-
-  const getYear = (date: string) => {
-    return new Date(date).getFullYear() % 100;
-  };
 
   const handleToggleArtists = () => {
     setShowArtists((showArtists) => !showArtists);
   };
 
-  const eventName =
-    event.eventName ||
-    `${event.headliner} ${getSeason(event.date)} '${getYear(event.date)}`;
-  // force timezone to have accurate date
-  const eventDate = new Date(`${event.date}T00:00:00`).toLocaleDateString();
-
   return (
-    <div onClick={handleToggleArtists} className="event-container">
+    <div onClick={handleToggleArtists} className={styles["event-container"]}>
       <h2>
-        <span>{eventName}</span>
-        <span className="date">{eventDate}</span>
+        <span>{getEventName(event)}</span>
+        <span className={styles["date"]}>{convertToDate(event.date)}</span>
       </h2>
       <p>
         <span>
