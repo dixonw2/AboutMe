@@ -7,7 +7,6 @@ const EventsList = ({ events }: { events: EventWithArtists[] }) => {
   );
   return (
     <div>
-      <h1>Events</h1>
       {sortedEvents.map((event) => (
         <Event key={event.id} event={event} />
       ))}

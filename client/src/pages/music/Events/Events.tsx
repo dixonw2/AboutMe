@@ -11,6 +11,7 @@ const Events = () => {
   const [artists, setArtists] = useState<ArtistWithEvents[]>([]);
   const [showArtists, setShowArtists] = useState(false);
   const [loading, setLoading] = useState(true);
+  const title = showArtists ? "Artists" : "Events";
 
   useEffect(() => {
     const getEvents = async () => {
@@ -31,24 +32,18 @@ const Events = () => {
     getEvents();
   }, []);
 
-  const handleSelectArtists = () => {
-    setShowArtists(true);
-  };
-
-  const handleSelectEvents = () => {
-    setShowArtists(false);
-  };
-
   return (
     <div>
+      <title>{title}</title>
+      <h1>{title}</h1>
       {loading ? (
         <em>Loading...</em>
       ) : (
         <div>
-          <Button selected={!showArtists} onClick={handleSelectEvents}>
+          <Button selected={!showArtists} onClick={() => setShowArtists(false)}>
             Events
           </Button>
-          <Button selected={showArtists} onClick={handleSelectArtists}>
+          <Button selected={showArtists} onClick={() => setShowArtists(true)}>
             Artists
           </Button>
           {showArtists ? (
