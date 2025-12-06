@@ -33,7 +33,6 @@ const ArtistsList = ({ artists }: { artists: ArtistWithEvents[] }) => {
 
   return (
     <div>
-      <h1>Artists</h1>
       <input
         placeholder="Search..."
         onChange={(e) => setFilter(e.target.value)}

@@ -7,6 +7,10 @@ import { convertToDate } from "@/utils/date-time";
 const Event = ({ event }: { event: EventWithArtists }) => {
   const [showArtists, setShowArtists] = useState(false);
 
+  const sortedEvents = [...event.artists].sort(
+    (a, b) => a.setOrder - b.setOrder
+  );
+
   const handleToggleArtists = () => {
     setShowArtists((showArtists) => !showArtists);
   };
@@ -18,26 +22,20 @@ const Event = ({ event }: { event: EventWithArtists }) => {
         <span className={styles["date"]}>{convertToDate(event.date)}</span>
       </h2>
       <p>
-        <span>
-          {event.headliner && (
-            <span>
-              Headliner: <em>{event.headliner}</em>
-            </span>
-          )}
-        </span>
-        <span>
-          <b>{event.venue}</b>
-        </span>
+        {event.headliner && (
+          <span>
+            Headliner: <em>{event.headliner}</em>
+          </span>
+        )}
+        <b>{event.venue}</b>
       </p>
       {showArtists && (
         <ul>
-          {event.artists
-            .sort((a, b) => a.setOrder - b.setOrder)
-            .map((artist, i) => (
-              <li key={artist.id}>
-                {i + 1}. {artist.artist}
-              </li>
-            ))}
+          {sortedEvents.map((artist, i) => (
+            <li key={artist.id}>
+              {i + 1}. {artist.artist}
+            </li>
+          ))}
         </ul>
       )}
     </div>
