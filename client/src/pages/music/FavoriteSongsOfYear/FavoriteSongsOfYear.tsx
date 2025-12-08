@@ -11,6 +11,7 @@ const FavoriteSongsOfYear = () => {
   const [loading, setLoading] = useState(true);
   const [years, setYears] = useState<Year[]>([]);
   const [currentYear, setCurrentYear] = useState(0);
+  const [showNewYear, setShowNewYear] = useState(false);
   const selected = years.find((year) => year.year == currentYear);
 
   useEffect(() => {
@@ -38,6 +39,7 @@ const FavoriteSongsOfYear = () => {
       `api/music/favorite-songs/delete/${deleteYear}`,
       { method: "DELETE" }
     );
+    
     if (response.ok) {
       setYears((years) => years.filter((year) => year.year !== deleteYear));
       setCurrentYear(years[0].year);
@@ -79,7 +81,12 @@ const FavoriteSongsOfYear = () => {
         </div>
       )}
       {!years.find((year) => year.year === new Date().getFullYear()) && (
-        <NewYear onCreate={handleCreate} />
+        <div>
+          <Button onClick={() => setShowNewYear((prev) => !prev)}>
+            {!showNewYear ? "+" : "-"}
+          </Button>
+          {showNewYear && <NewYear onCreate={handleCreate} />}
+        </div>
       )}
     </>
   );
