@@ -3,6 +3,8 @@ import type Year from "@/types/favorite-songs/Year";
 import type Song from "@/types/favorite-songs/Song";
 import { convertToTime } from "@/utils/date-time";
 
+import styles from "@/pages/music/FavoriteSongsOfYear/FavoriteSongsOfYear.module.css";
+
 const NewYear = ({ onCreate }: { onCreate: (year: Year) => void }) => {
   const [songs, setSongs] = useState<Song[]>([]);
   const [comment, setComment] = useState("");
@@ -53,11 +55,11 @@ const NewYear = ({ onCreate }: { onCreate: (year: Year) => void }) => {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit} className={styles.formContainer}>
       <label htmlFor="year">Year:</label>
-      <input id="year" value={year} disabled />
+      <input id="year" value={year} disabled className={styles.yearInput} />
       <CurrentSongs songs={songs} />
-      {songs.length < 13 && <SongInput onAdd={addSong} />}
+      {songs.length < 13 && <SongInput onAdd={addSong} currentSongs={songs} />}
       <label style={{ display: "block" }} htmlFor="comment">
         Comment:
       </label>
@@ -65,8 +67,13 @@ const NewYear = ({ onCreate }: { onCreate: (year: Year) => void }) => {
         id="comment"
         value={comment}
         onChange={(e) => setComment(e.target.value)}
+        className={styles.commentBox}
       />
-      <button type="submit" disabled={!canSubmit()}>
+      <button
+        type="submit"
+        disabled={!canSubmit()}
+        className={styles.buttonPrimary}
+      >
         Submit
       </button>
     </form>
@@ -75,17 +82,21 @@ const NewYear = ({ onCreate }: { onCreate: (year: Year) => void }) => {
 
 const CurrentSongs = ({ songs }: { songs: Song[] }) => {
   return (
-    <div>
-      <ol>
-        {songs.map((song) => (
-          <li key={song.songName}>{song.songName}</li>
-        ))}
-      </ol>
-    </div>
+    <ol className={styles.songsList}>
+      {songs.map((song) => (
+        <li key={song.songName}>{song.songName}</li>
+      ))}
+    </ol>
   );
 };
 
-const SongInput = ({ onAdd }: { onAdd: (song: Song) => void }) => {
+const SongInput = ({
+  onAdd,
+  currentSongs,
+}: {
+  onAdd: (song: Song) => void;
+  currentSongs: Song[];
+}) => {
   const [song, setSong] = useState("");
   const [artist, setArtist] = useState("");
   const [album, setAlbum] = useState("");
@@ -97,13 +108,13 @@ const SongInput = ({ onAdd }: { onAdd: (song: Song) => void }) => {
   const addSong = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     const newSong: Song = {
-      songName: song,
-      artist: artist,
-      album: album,
-      genre: genre,
-      songLength: length,
-      appleMusicLink: appleMusicLink,
-      spotifyLink: spotifyLink,
+      songName: song.trim(),
+      artist: artist.trim(),
+      album: album.trim(),
+      genre: genre.trim(),
+      songLength: length.trim(),
+      appleMusicLink: appleMusicLink.trim(),
+      spotifyLink: spotifyLink.trim(),
     };
     onAdd(newSong);
     setSong("");
@@ -120,6 +131,10 @@ const SongInput = ({ onAdd }: { onAdd: (song: Song) => void }) => {
       return length.match(/^(\d+):(\d{2})$/);
     };
 
+    const validateDuplicate = () => {
+      return !currentSongs.find((s) => s.artist === artist);
+    };
+
     return (
       song.length > 0 &&
       artist.length > 0 &&
@@ -127,41 +142,52 @@ const SongInput = ({ onAdd }: { onAdd: (song: Song) => void }) => {
       genre.length > 0 &&
       validateSongLength() &&
       appleMusicLink.length > 0 &&
-      spotifyLink.length > 0
+      spotifyLink.length > 0 &&
+      validateDuplicate()
     );
   };
 
   return (
-    <>
-      <InputField id="song" value={song} onChange={setSong}>
-        Song:
-      </InputField>
-      <InputField id="artist" value={artist} onChange={setArtist}>
-        Artist:
-      </InputField>
-      <InputField id="album" value={album} onChange={setAlbum}>
-        Album:
-      </InputField>
-      <InputField id="genre" value={genre} onChange={setGenre}>
-        Genre:
-      </InputField>
+    <div className={styles.grid}>
+      <div className={styles.linkRow}>
+        <InputField id="song" value={song} onChange={setSong}>
+          Song:
+        </InputField>
+        <InputField id="artist" value={artist} onChange={setArtist}>
+          Artist:
+        </InputField>
+      </div>
+      <div className={styles.linkRow}>
+        <InputField id="album" value={album} onChange={setAlbum}>
+          Album:
+        </InputField>
+        <InputField id="genre" value={genre} onChange={setGenre}>
+          Genre:
+        </InputField>
+      </div>
       <InputField id="length" value={length} onChange={setLength}>
         Length:
       </InputField>
-      <InputField
-        id="apple-music"
-        value={appleMusicLink}
-        onChange={setAppleMusicLink}
+      <div className={styles.linkRow}>
+        <InputField
+          id="apple-music"
+          value={appleMusicLink}
+          onChange={setAppleMusicLink}
+        >
+          Apple Music Link:
+        </InputField>
+        <InputField id="spotify" value={spotifyLink} onChange={setSpotifyLink}>
+          Spotify Link:
+        </InputField>
+      </div>
+      <button
+        onClick={addSong}
+        disabled={!validateSong()}
+        className={styles.addSongButton}
       >
-        Apple Music Link:
-      </InputField>
-      <InputField id="spotify" value={spotifyLink} onChange={setSpotifyLink}>
-        Spotify Link:
-      </InputField>
-      <button onClick={addSong} disabled={!validateSong()}>
         Add Song
       </button>
-    </>
+    </div>
   );
 };
 
@@ -177,14 +203,10 @@ const InputField = ({
   onChange: (value: string) => void;
 }) => {
   return (
-    <>
+    <div className={styles.inputGroup}>
       <label htmlFor={id}>{children}</label>
-      <input
-        id={id}
-        value={value}
-        onChange={(e) => onChange(e.target.value.trim())}
-      />
-    </>
+      <input id={id} value={value} onChange={(e) => onChange(e.target.value)} />
+    </div>
   );
 };
 
