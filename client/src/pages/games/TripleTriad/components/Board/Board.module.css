@@ -1,0 +1,24 @@
+.board {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(3, 1fr);
+  gap: 8px; /* adjust to taste */
+  width: calc(200px * 3); /* set your board size */
+  height: calc(250px * 3); /* same */
+  background: #1a1a1a; /* placeholder background */
+  padding: 8px; /* optional */
+  box-sizing: border-box;
+}
+
+.cell {
+  background: #333;
+  border: 2px solid #555;
+}
+
+.empty {
+  cursor: pointer;
+}
+
+.filled {
+  cursor: default;
+}
