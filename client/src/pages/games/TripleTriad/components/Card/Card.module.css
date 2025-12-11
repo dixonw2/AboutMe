@@ -1,0 +1,68 @@
+.cardContainer {
+  position: relative;
+  width: 200px;
+  height: 250px;
+}
+
+.cardContainer.selected::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border: 8px solid red;
+  box-sizing: border-box;
+  pointer-events: none;
+}
+
+.cardImage {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.cardValue {
+  position: absolute;
+  font-weight: bold;
+  color: white;
+  text-shadow: 2px 2px 4px black;
+  font-size: 2rem;
+  pointer-events: none;
+  user-select: none;
+
+  -webkit-text-stroke: 0.2px black;
+  text-shadow: 2px 2px 0 black, -2px 2px 0 black, 2px -2px 0 black,
+    -2px -2px 0 black, 2px 0 0 black, -2px 0 0 black, 0 2px 0 black,
+    0 -2px 0 black;
+}
+
+.left {
+  top: 28%;
+  left: 8%;
+  transform: translateY(-50%);
+}
+
+.top {
+  top: 8%;
+  left: 28%;
+  transform: translateX(-50%);
+}
+
+.right {
+  top: 28%;
+  left: 38%;
+  transform: translateY(-50%);
+}
+
+.bottom {
+  top: 28%;
+  left: 28%;
+  transform: translateX(-50%);
+}
+
+.text {
+  bottom: 5%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: max-content;
+  text-align: center;
+  font-size: 1.5rem;
+}

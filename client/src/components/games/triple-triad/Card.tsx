@@ -1,4 +1,4 @@
-import type TripleTriadCard from "@/types/TripleTriadCard";
+import type TripleTriadCard from "@/types/triple-triad/TripleTriadCard";
 
 const Card = ({
   card,

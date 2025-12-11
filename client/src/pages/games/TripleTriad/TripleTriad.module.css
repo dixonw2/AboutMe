@@ -1,0 +1,23 @@
+.gameLayout {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  width: 100%;
+  margin-bottom: 40px;
+}
+
+.gameLayout > :nth-child(1),
+.gameLayout > :nth-child(3) {
+  width: 200px;
+}
+
+.gameLayout > :nth-child(2) {
+  min-width: 0px;
+}
+
+.scoreLayout {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}

@@ -1,0 +1,13 @@
+.hand {
+  margin: 10px;
+  cursor: pointer;
+}
+
+.cardWrapper {
+  position: relative;
+}
+
+.cardWrapper:hover {
+  transform: scale(1.1);
+  z-index: 1000;
+}
