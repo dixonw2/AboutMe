@@ -17,19 +17,18 @@ const TripleTriad = () => {
     null
   );
 
+  const getHands = async () => {
+    const [player, opponent] = await Promise.all([
+      fetch("/api/games/triple-triad/cards/random/hand"),
+      fetch("/api/games/triple-triad/cards/random/hand"),
+    ]);
+    const playerData: TripleTriadCard[] = await player.json();
+    const opponentData: TripleTriadCard[] = await opponent.json();
+    setHand(playerData.map((card) => ({ ...card, isPlayer: true })));
+    setOpponentHand(opponentData.map((card) => ({ ...card, isPlayer: false })));
+  };
+
   useEffect(() => {
-    const getHands = async () => {
-      const [player, opponent] = await Promise.all([
-        fetch("/api/games/triple-triad/cards/random/hand"),
-        fetch("/api/games/triple-triad/cards/random/hand"),
-      ]);
-      const playerData: TripleTriadCard[] = await player.json();
-      const opponentData: TripleTriadCard[] = await opponent.json();
-      setHand(playerData.map((card) => ({ ...card, isPlayer: true })));
-      setOpponentHand(
-        opponentData.map((card) => ({ ...card, isPlayer: false }))
-      );
-    };
     getHands();
   }, []);
 
@@ -40,6 +39,15 @@ const TripleTriad = () => {
     } else {
       setSelectedCard(card);
     }
+  };
+
+  const handleReset = () => {
+    getHands();
+    setBoard([
+      [null, null, null],
+      [null, null, null],
+      [null, null, null],
+    ]);
   };
 
   const handlePlayCard = (row: number, col: number) => {
@@ -54,12 +62,14 @@ const TripleTriad = () => {
     }
 
     newBoard = opponentPlayCard(newBoard);
+
+    // Update board state after both players move
     setBoard(newBoard);
     setHand((prev) => prev.filter((c) => c.id !== selectedCard.id));
     setSelectedCard(null);
   };
 
-  // returns which cards should be flipped at a given index
+  // returns which adjacent cards should be flipped for a given index
   const getAdjacentFlips = (
     row: number,
     col: number,
@@ -133,6 +143,10 @@ const TripleTriad = () => {
     return newBoard;
   };
 
+  const playerScore = board.flat().filter((card) => card?.isPlayer).length;
+  const oppScore = board.flat().filter((card) => card && !card.isPlayer).length;
+  const gameOver = board.flat().filter((card) => card !== null).length === 9;
+
   return (
     <div>
       <title>Triple Triad</title>
@@ -163,27 +177,13 @@ const TripleTriad = () => {
         />
       </div>
       <div className={styles.scoreLayout}>
-        <div>
-          You:{" "}
-          {board.flat().filter((card) => card?.isPlayer).length + hand.length}
-        </div>
-        {board.flat().filter((card) => card !== null).length === 9 ? (
-          <div>
-            Winner:{" "}
-            {board.flat().filter((card) => card?.isPlayer).length >
-            board.flat().filter((card) => card && !card.isPlayer).length
-              ? "You"
-              : "Opponent"}
-          </div>
-        ) : (
-          <div></div>
+        <h3>You: {playerScore}</h3>
+        {gameOver && (
+          <h3>Winner: {playerScore > oppScore ? "You" : "Opponent"}</h3>
         )}
-        <div>
-          Opponent:{" "}
-          {board.flat().filter((card) => card && !card.isPlayer).length +
-            opponentHand.length}
-        </div>
+        <h3>Opponent: {oppScore}</h3>
       </div>
+      <button onClick={handleReset}>Reset Game</button>
     </div>
   );
 };
