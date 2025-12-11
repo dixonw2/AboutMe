@@ -2,11 +2,11 @@
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   grid-template-rows: repeat(3, 1fr);
-  gap: 8px; /* adjust to taste */
-  width: calc(200px * 3); /* set your board size */
-  height: calc(250px * 3); /* same */
-  background: #1a1a1a; /* placeholder background */
-  padding: 8px; /* optional */
+  gap: 8px;
+  width: calc(208px * 3);
+  height: calc(258px * 3);
+  background: #1a1a1a;
+  padding: 8px;
   box-sizing: border-box;
 }
 
