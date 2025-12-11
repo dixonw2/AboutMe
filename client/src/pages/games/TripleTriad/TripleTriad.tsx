@@ -4,20 +4,26 @@ import { useEffect, useState } from "react";
 import styles from "./TripleTriad.module.css";
 import Hand from "./components/Hand/Hand";
 import Board from "./components/Board/Board";
+import Button from "@/components/Button";
+
+import { getAdjacentFlips } from "@/utils/triple-triad";
 
 const TripleTriad = () => {
+  const boardReset = [
+    [null, null, null],
+    [null, null, null],
+    [null, null, null],
+  ];
   const [hand, setHand] = useState<TripleTriadCard[]>([]);
   const [opponentHand, setOpponentHand] = useState<TripleTriadCard[]>([]);
-  const [board, setBoard] = useState<(TripleTriadCard | null)[][]>([
-    [null, null, null],
-    [null, null, null],
-    [null, null, null],
-  ]);
+  const [board, setBoard] = useState<(TripleTriadCard | null)[][]>(boardReset);
   const [selectedCard, setSelectedCard] = useState<TripleTriadCard | null>(
     null
   );
+  const [gameStarted, setGameStarted] = useState(false);
+  const [gameType, setGameType] = useState("quickplay");
 
-  const getHands = async () => {
+  const getRandomHands = async () => {
     const [player, opponent] = await Promise.all([
       fetch("/api/games/triple-triad/cards/random/hand"),
       fetch("/api/games/triple-triad/cards/random/hand"),
@@ -27,10 +33,6 @@ const TripleTriad = () => {
     setHand(playerData.map((card) => ({ ...card, isPlayer: true })));
     setOpponentHand(opponentData.map((card) => ({ ...card, isPlayer: false })));
   };
-
-  useEffect(() => {
-    getHands();
-  }, []);
 
   const handleSelectCard = (card: TripleTriadCard) => {
     if (!card.isPlayer) return;
@@ -42,12 +44,18 @@ const TripleTriad = () => {
   };
 
   const handleReset = () => {
-    getHands();
-    setBoard([
-      [null, null, null],
-      [null, null, null],
-      [null, null, null],
-    ]);
+    setHand([]);
+    setOpponentHand([]);
+    getRandomHands();
+    setBoard(boardReset);
+  };
+
+  const handleStart = () => {
+    if (gameStarted) return;
+    setGameStarted(true);
+    if (gameType === "quickplay") {
+      handleReset();
+    }
   };
 
   const handlePlayCard = (row: number, col: number) => {
@@ -69,44 +77,10 @@ const TripleTriad = () => {
     setSelectedCard(null);
   };
 
-  // returns which adjacent cards should be flipped for a given index
-  const getAdjacentFlips = (
-    row: number,
-    col: number,
-    card: TripleTriadCard,
-    boardState: (TripleTriadCard | null)[][]
-  ) => {
-    const flips: Array<{ r: number; c: number; card: TripleTriadCard }> = [];
-    const up = boardState[row - 1]?.[col];
-    const left = boardState[row]?.[col - 1];
-    const down = boardState[row + 1]?.[col];
-    const right = boardState[row]?.[col + 1];
-
-    if (up && up.isPlayer !== card.isPlayer && up.down < card.up)
-      flips.push({ r: row - 1, c: col, card: up });
-    if (left && left.isPlayer !== card.isPlayer && left.right < card.left)
-      flips.push({ r: row, c: col - 1, card: left });
-    if (down && down.isPlayer !== card.isPlayer && down.up < card.down)
-      flips.push({ r: row + 1, c: col, card: down });
-    if (right && right.isPlayer !== card.isPlayer && right.left < card.right)
-      flips.push({ r: row, c: col + 1, card: right });
-
-    return flips;
-  };
-
-  const evaluateMove = (
-    row: number,
-    col: number,
-    card: TripleTriadCard,
-    boardState: (TripleTriadCard | null)[][]
-  ) => {
-    return getAdjacentFlips(row, col, card, boardState).length;
-  };
-
   const opponentPlayCard = (boardState: (TripleTriadCard | null)[][]) => {
     if (opponentHand.length === 0) return boardState;
 
-    let bestScore = -1;
+    let bestNumFlips = -1;
     let bestMove: { row: number; col: number; card: TripleTriadCard } | null =
       null;
 
@@ -115,9 +89,9 @@ const TripleTriad = () => {
         for (let c = 0; c < boardState[r].length; c++) {
           if (boardState[r][c] !== null) continue;
 
-          const score = evaluateMove(r, c, card, boardState);
-          if (score > bestScore) {
-            bestScore = score;
+          const numFlips = getAdjacentFlips(r, c, card, boardState).length;
+          if (numFlips > bestNumFlips) {
+            bestNumFlips = numFlips;
             bestMove = { row: r, col: c, card };
           }
         }
@@ -143,6 +117,10 @@ const TripleTriad = () => {
     return newBoard;
   };
 
+  useEffect(() => {
+    setGameStarted(false);
+  }, [gameType]);
+
   const playerScore = board.flat().filter((card) => card?.isPlayer).length;
   const oppScore = board.flat().filter((card) => card && !card.isPlayer).length;
   const gameOver = board.flat().filter((card) => card !== null).length === 9;
@@ -159,31 +137,56 @@ const TripleTriad = () => {
         on the touching side. The winner is whoever has the most cards once all
         spaces have been filled.
       </p>
-      <div className={styles.gameLayout}>
-        <Hand
-          cards={hand}
-          onSelect={handleSelectCard}
-          selected={selectedCard}
-        />
-        <Board
-          board={board}
-          onPlayCard={handlePlayCard}
-          hasSelected={!!selectedCard}
-        />
-        <Hand
-          cards={opponentHand}
-          onSelect={handleSelectCard}
-          selected={selectedCard}
-        />
+      <div>
+        <Button
+          onClick={() => setGameType("quickplay")}
+          selected={gameType === "quickplay"}
+        >
+          QuickPlay
+        </Button>
+        <Button
+          onClick={() => setGameType("gauntlet")}
+          selected={gameType === "gauntlet"}
+        >
+          Gauntlet
+        </Button>
       </div>
-      <div className={styles.scoreLayout}>
-        <h3>You: {playerScore}</h3>
-        {gameOver && (
-          <h3>Winner: {playerScore > oppScore ? "You" : "Opponent"}</h3>
-        )}
-        <h3>Opponent: {oppScore}</h3>
-      </div>
-      <button onClick={handleReset}>Reset Game</button>
+      {gameStarted && (
+        <div>
+          <div className={styles.gameLayout}>
+            <Hand
+              cards={hand}
+              onSelect={handleSelectCard}
+              selected={selectedCard}
+            />
+            <Board
+              board={board}
+              onPlayCard={handlePlayCard}
+              hasSelected={!!selectedCard}
+            />
+            <Hand
+              cards={opponentHand}
+              onSelect={handleSelectCard}
+              selected={selectedCard}
+            />
+          </div>
+          <div className={styles.scoreLayout}>
+            <h3>You: {playerScore}</h3>
+            {gameOver && (
+              <h3>Winner: {playerScore > oppScore ? "You" : "Opponent"}</h3>
+            )}
+            <h3>Opponent: {oppScore}</h3>
+          </div>
+        </div>
+      )}
+      {gameStarted && gameType === "quickplay" && (
+        <button onClick={handleReset}>Reset Game</button>
+      )}
+      {!gameStarted && (
+        <button onClick={handleStart} disabled={gameType === "gauntlet"}>
+          Start Game
+        </button>
+      )}
     </div>
   );
 };
