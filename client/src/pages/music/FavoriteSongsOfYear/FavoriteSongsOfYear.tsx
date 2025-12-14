@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
-import SongsTable from "@/pages/music/FavoriteSongsOfYear/components/SongsTable";
+import SongsList from "@/pages/music/FavoriteSongsOfYear/components/SongsList/SongsList";
 import type Year from "@/types/favorite-songs/Year";
 import Button from "@/components/Button";
 
-import FavoritesOverview from "./components/FavoritesOverview";
-import YearInfo from "./components/YearInfo";
-import NewYear from "./components/NewYear";
+import Overview from "./components/Overview/Overview";
+import Info from "./components/Info/Info";
+import NewYear from "./components/CreateYearlyEntry/CreateYearlyEntry";
 
 const FavoriteSongsOfYear = () => {
   const [loading, setLoading] = useState(true);
@@ -39,7 +39,7 @@ const FavoriteSongsOfYear = () => {
       `api/music/favorite-songs/delete/${deleteYear}`,
       { method: "DELETE" }
     );
-    
+
     if (response.ok) {
       setYears((years) => years.filter((year) => year.year !== deleteYear));
       setCurrentYear(years[0].year);
@@ -51,7 +51,7 @@ const FavoriteSongsOfYear = () => {
       <title>
         {loading ? "Favorite Songs" : `Favorite Songs of ${currentYear}`}
       </title>
-      <FavoritesOverview />
+      <Overview />
       <hr />
       {loading ? (
         <em>Loading...</em>
@@ -69,8 +69,8 @@ const FavoriteSongsOfYear = () => {
 
           {selected && (
             <>
-              <YearInfo year={selected} />
-              <SongsTable songs={selected.songs} year={selected.year} />
+              <Info year={selected} />
+              <SongsList songs={selected.songs} year={selected.year} />
               {selected.year === new Date().getFullYear() && (
                 <Button onClick={() => handleDelete(selected.year)}>
                   Delete

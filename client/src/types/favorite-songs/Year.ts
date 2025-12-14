@@ -1,9 +1,9 @@
-import type Song from "./Song";
+import type { Song } from "./Song";
 
-export default interface Year {
+export interface Year {
   year: number;
   comment: string;
   dateCreated: string;
-  dateUpdated: string | null;
+  dateUpdated?: string;
   songs: Song[];
 }

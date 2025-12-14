@@ -1,0 +1,21 @@
+.inputGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.inputGroup label {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #d0d0d0;
+  margin-top: 1rem;
+}
+
+.inputGroup input {
+  padding: 0.45rem 0.6rem;
+  border: 1px solid #444;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  background: #2a2a2a; /* DARK */
+  color: #fff;
+}
