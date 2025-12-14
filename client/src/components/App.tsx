@@ -7,7 +7,7 @@ import { useState } from "react";
 import Button from "./Button";
 
 const App = () => {
-  const [tab, setTab] = useState("favorites");
+  const [tab, setTab] = useState("events");
 
   return (
     <div>

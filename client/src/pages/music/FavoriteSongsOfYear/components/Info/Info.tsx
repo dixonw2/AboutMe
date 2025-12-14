@@ -1,5 +1,5 @@
 import styles from "./Info.module.css";
-import type Year from "@/types/favorite-songs/Year";
+import type { Year } from "@/types/favorite-songs/Year";
 import { formatDate } from "@/utils/date-time";
 
 const Info = ({ year }: { year: Year }) => {

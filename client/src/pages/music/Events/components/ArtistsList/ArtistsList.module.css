@@ -1,0 +1,8 @@
+.artistContainer {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.artistContainer h2 {
+    font-size: 1.8rem;
+}

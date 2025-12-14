@@ -2,8 +2,8 @@ import type { ArtistAtEvent } from "./Artist";
 
 export interface Event {
   id: number;
-  eventName: string | null;
-  headliner: string | null;
+  eventName?: string;
+  headliner?: string;
   date: string;
   venue: string;
 }

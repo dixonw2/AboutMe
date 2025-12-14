@@ -1,0 +1,14 @@
+.artist {
+  text-align: left;
+  width: 100%;
+  padding-left: 1rem;
+}
+
+.artist:hover {
+  cursor: pointer;
+  background-color: rgb(59, 59, 59);
+}
+
+.artist ul {
+  list-style: outside;
+}

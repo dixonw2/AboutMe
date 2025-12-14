@@ -1,4 +1,5 @@
 import type { Event } from "@/types/events/Event";
+import { convertToDate } from "./date-time";
 
 const getSeason = (date: string) => {
   // getMonth() is zero based
@@ -18,7 +19,9 @@ const getYear = (date: string) => {
 const getEventName = (event: Event) => {
   return (
     event.eventName ||
-    `${event.headliner} ${getSeason(event.date)} '${getYear(event.date)}`
+    `${event.headliner} ${getSeason(convertToDate(event.date))} '${getYear(
+      convertToDate(event.date)
+    )}`
   );
 };
 

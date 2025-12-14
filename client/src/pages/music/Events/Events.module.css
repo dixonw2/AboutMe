@@ -1,4 +1,4 @@
-.event-container {
+/*.event-container {
   border: 2px solid black;
 }
 
@@ -20,4 +20,8 @@
 }
 .event-container ul {
   list-style: none;
+} */
+
+.eventContainer {
+  
 }

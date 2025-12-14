@@ -12,13 +12,19 @@ const getAdjacentFlips = (
   row: number,
   col: number,
   card: TripleTriadCard,
-  boardState: (TripleTriadCard | null)[][]
+  board: (TripleTriadCard | null)[][]
 ) => {
-  const flips: Array<{ r: number; c: number; card: TripleTriadCard }> = [];
-  const up = boardState[row - 1]?.[col];
-  const left = boardState[row]?.[col - 1];
-  const down = boardState[row + 1]?.[col];
-  const right = boardState[row]?.[col + 1];
+  interface Flip {
+    r: number;
+    c: number;
+    card: TripleTriadCard;
+  }
+
+  const flips: Flip[] = [];
+  const up = board[row - 1]?.[col];
+  const left = board[row]?.[col - 1];
+  const down = board[row + 1]?.[col];
+  const right = board[row]?.[col + 1];
 
   if (up && up.isPlayer !== card.isPlayer && up.down < card.up)
     flips.push({ r: row - 1, c: col, card: up });
