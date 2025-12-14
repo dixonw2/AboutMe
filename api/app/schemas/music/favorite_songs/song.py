@@ -21,6 +21,7 @@ class SongRead(SongBase):
 
 
 class SongUpdate(SongBase):
+    id: int | None = None
     song_name: str | None = None
     artist: str | None = None
     album: str | None = None

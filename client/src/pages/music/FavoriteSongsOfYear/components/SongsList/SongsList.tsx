@@ -1,20 +1,9 @@
 import { useState } from "react";
 import type { Song } from "@/types/favorite-songs/Song";
-import type { Year } from "@/types/favorite-songs/Year";
 
 import styles from "./SongsList.module.css";
 
-const SongsList = ({
-  songs,
-  year,
-  editMode,
-  onEdit,
-}: {
-  songs: Song[];
-  year: number;
-  editMode?: boolean;
-  onEdit?: (entry: Year) => void;
-}) => {
+const SongsList = ({ songs, year }: { songs: Song[]; year: number }) => {
   return (
     <div className={styles.tableContainer}>
       <table
