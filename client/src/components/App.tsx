@@ -7,7 +7,7 @@ import { useState } from "react";
 import Button from "./Button";
 
 const App = () => {
-  const [tab, setTab] = useState("tripletriad");
+  const [tab, setTab] = useState("favorites");
 
   return (
     <div>

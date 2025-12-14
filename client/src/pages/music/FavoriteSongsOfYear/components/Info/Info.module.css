@@ -1,0 +1,29 @@
+.container {
+  padding: 1rem 2rem;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.yearHeader {
+  font-size: clamp(2.5rem, 5vw, 4rem); /* responsive */
+  font-weight: 700;
+  color: #ffffff;
+  text-align: right;
+  margin: 0 0 0.5rem 0;
+}
+
+.yearSubHeader {
+  font-size: 1rem;
+  font-weight: 400;
+  color: #bbb;
+  text-align: right;
+  margin: 0 0 1rem 0;
+}
+
+.commentText {
+  font-size: 1rem;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.87);
+  white-space: pre-wrap;
+  margin: 0;
+}

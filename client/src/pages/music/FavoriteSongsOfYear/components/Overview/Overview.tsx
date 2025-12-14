@@ -1,16 +1,16 @@
-import styles from "../FavoriteSongsOfYear.module.css";
+import styles from "./Overview.module.css";
 
-const FavoritesOverview = () => {
+const Overview = () => {
   return (
-    <div>
-      <h1 className={styles.header}>Favorite Songs</h1>
-      <p>
+    <div className={styles.container}>
+      <h1 className={styles.containerHeader}>Favorite Songs</h1>
+      <p className={styles.containerP}>
         One of my best friends has been ending his years by compiling a list of
         his top 13 songs from that year, so in 2017 I decided to do that as
         well! There are a couple rules, however.
       </p>
-      <ul>
-        <li>
+      <ul className={styles.containerList}>
+        <li className={styles.containerListItem}>
           The song must be released during the current year. If it was released
           as a single the previous year but I didn't hear it until the current
           year AND it's included on an album that's been released during the
@@ -18,7 +18,7 @@ const FavoritesOverview = () => {
           during the current year and I've heard it, then it can only be added
           to the list for that year.
         </li>
-        <li>
+        <li className={styles.containerListItem}>
           Only one song per band/artist per year. This is a rule I added after
           2017 because I came to the realization that if a band releases an
           album I thoroughly enjoy, then the list will likely be filled with
@@ -29,7 +29,7 @@ const FavoritesOverview = () => {
           year, they both may be added to the list since they're different
           artists.
         </li>
-        <li>
+        <li className={styles.containerListItem}>
           Covers <em>are</em> allowed, but should generally be rare. If I made a
           list in 2016, then Blank Space by I Prevail would have probably made
           the list. Bad Wolves' cover of Zombie made it in 2018 because it's a
@@ -41,7 +41,7 @@ const FavoritesOverview = () => {
           it's just simply <em>alright</em>.
         </li>
       </ul>
-      <p>
+      <p className={styles.containerP}>
         Making this list every year has made me listen to a ton of new music I
         normally wouldn't listen to, and it's introduced me to several new bands
         that I wouldn't have heard of otherwise!
@@ -50,4 +50,4 @@ const FavoritesOverview = () => {
   );
 };
 
-export default FavoritesOverview;
+export default Overview;
