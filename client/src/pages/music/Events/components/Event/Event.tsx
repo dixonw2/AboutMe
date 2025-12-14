@@ -1,7 +1,7 @@
 import { useState } from "react";
 import type { EventWithArtists } from "@/types/events/Event";
 import { getEventName } from "@/utils/event";
-import styles from "../Events.module.css";
+import styles from "./Event.module.css";
 import { convertToDate } from "@/utils/date-time";
 
 const Event = ({ event }: { event: EventWithArtists }) => {
@@ -16,27 +16,25 @@ const Event = ({ event }: { event: EventWithArtists }) => {
   };
 
   return (
-    <div onClick={handleToggleArtists} className={styles["event-container"]}>
-      <h2>
-        <span>{getEventName(event)}</span>
-        <span className={styles["date"]}>{convertToDate(event.date)}</span>
-      </h2>
-      <p>
+    <div onClick={handleToggleArtists} className={styles.event}>
+      <div className={styles.header}>
+        <span className={styles.title}>{getEventName(event)}</span>
+        <span className={styles.date}>{convertToDate(event.date)}</span>
+      </div>
+      <div className={styles.meta}>
         {event.headliner && (
           <span>
             Headliner: <em>{event.headliner}</em>
           </span>
         )}
-        <b>{event.venue}</b>
-      </p>
+        <b>({event.venue})</b>
+      </div>
       {showArtists && (
-        <ul>
-          {sortedEvents.map((artist, i) => (
-            <li key={artist.id}>
-              {i + 1}. {artist.artist}
-            </li>
+        <ol className={styles.artists}>
+          {sortedEvents.map((artist) => (
+            <li key={artist.id}>{artist.artist}</li>
           ))}
-        </ul>
+        </ol>
       )}
     </div>
   );

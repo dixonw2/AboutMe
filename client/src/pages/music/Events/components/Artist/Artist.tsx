@@ -3,14 +3,14 @@ import { convertToDate } from "@/utils/date-time";
 import { getEventName } from "@/utils/event";
 import { useState } from "react";
 
-import styles from "../Events.module.css";
+import styles from "./Artist.module.css";
 
 const Artist = ({ artist }: { artist: ArtistWithEvents }) => {
   const [showEvents, setShowEvents] = useState(false);
 
   return (
     <div
-      className={styles["event-container"]}
+      className={styles.artist}
       onClick={() => setShowEvents((event) => !event)}
     >
       <h2>
@@ -18,13 +18,13 @@ const Artist = ({ artist }: { artist: ArtistWithEvents }) => {
       </h2>
       {showEvents && (
         <div>
-          <ol>
+          <ul>
             {artist.events.map((event) => (
               <li key={event.id}>
                 {getEventName(event)} ({convertToDate(event.date)})
               </li>
             ))}
-          </ol>
+          </ul>
         </div>
       )}
     </div>

@@ -2,9 +2,9 @@ import { useEffect, useState } from "react";
 
 import type { EventWithArtists } from "@/types/events/Event";
 import type { ArtistWithEvents } from "@/types/events/Artist";
-import EventsList from "./components/EventsList";
+import EventsList from "./components/EventsList/EventsList";
+import ArtistsList from "./components/ArtistsList/ArtistsList";
 import Button from "@/components/Button";
-import ArtistsList from "./components/ArtistsList";
 
 const Events = () => {
   const [events, setEvents] = useState<EventWithArtists[]>([]);

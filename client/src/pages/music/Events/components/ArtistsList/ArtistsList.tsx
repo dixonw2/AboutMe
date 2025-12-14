@@ -1,7 +1,9 @@
-import type { ArtistWithEvents } from "@/types/events/Artist";
-import Artist from "./Artist";
 import { useState } from "react";
 import { getEventName } from "@/utils/event";
+import Artist from "../Artist/Artist";
+import type { ArtistWithEvents } from "@/types/events/Artist";
+
+import styles from "./ArtistsList.module.css";
 
 const ArtistsList = ({ artists }: { artists: ArtistWithEvents[] }) => {
   const [filter, setFilter] = useState("");
@@ -19,7 +21,7 @@ const ArtistsList = ({ artists }: { artists: ArtistWithEvents[] }) => {
       event.venue.toLowerCase().includes(search)
     );
     const matchesYear = artist.events.some((event) =>
-      event.date.includes(search)
+      event.date.toLowerCase().includes(search)
     );
 
     return matchesArtist || matchesEventName || matchesVenue || matchesYear;
@@ -27,9 +29,7 @@ const ArtistsList = ({ artists }: { artists: ArtistWithEvents[] }) => {
   const sortedArtists = artists.sort((a, b) =>
     stripArticles(a.artist).localeCompare(stripArticles(b.artist))
   );
-  const filteredSortedArtists = sortedArtists.filter((artist) =>
-    filterList(artist)
-  );
+  const filteredSortedArtists = sortedArtists.filter(filterList);
 
   return (
     <div>
@@ -38,9 +38,11 @@ const ArtistsList = ({ artists }: { artists: ArtistWithEvents[] }) => {
         onChange={(e) => setFilter(e.target.value)}
         value={filter}
       />
-      {filteredSortedArtists.map((artist) => (
-        <Artist key={artist.id} artist={artist} />
-      ))}
+      <div className={styles.artistContainer}>
+        {filteredSortedArtists.map((artist) => (
+          <Artist key={artist.id} artist={artist} />
+        ))}
+      </div>
     </div>
   );
 };
