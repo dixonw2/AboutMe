@@ -10,6 +10,7 @@ class BlogAlbumSong(Base):
     id = Column("id", Integer, primary_key=True, autoincrement=True)
     song_name = Column("SongName", String(256), nullable=False)
     song_length = Column("SongLength", Time, nullable=False)
+    song_rating = Column("SongRating", Integer, nullable=False)
     id_blog_albums = Column(
         "IdBlogAlbums",
         Integer,

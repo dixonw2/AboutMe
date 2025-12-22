@@ -35,6 +35,7 @@ def reset_test_blog():
             song = BlogAlbumSong(
                 song_name=s["songName"],
                 song_length=time(hour=int(h), minute=int(m), second=int(sec)),
+                song_rating=s["songRating"],
             )
             album.songs.append(song)
 
@@ -85,7 +86,7 @@ def test_update_blog(client: TestClient):
     update_data = {
         "albumName": "Update Album Name",
         "songs": [
-            {"songName": f"Update Song {i + 1}", "songLength": "04:20:00"}
+            {"songName": f"Update Song {i + 1}", "songRating": 6, "songLength": "04:20:00"}
             for i in range(13)
         ],
     }

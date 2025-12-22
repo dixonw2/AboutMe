@@ -36,6 +36,7 @@ async def create_album(
             BlogAlbumSong(
                 song_name=song.song_name,
                 song_length=song.song_length,
+                song_rating=song.song_rating,
                 id_blog_albums=new_album.id,
             )
             for song in album.songs
