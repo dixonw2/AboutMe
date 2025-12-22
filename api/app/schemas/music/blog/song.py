@@ -4,6 +4,7 @@ import datetime
 
 class SongBase(AboutMeModel):
     song_name: str
+    song_rating: int
     song_length: datetime.time
 
 

@@ -35,7 +35,12 @@ TEST_CREATE_BLOG_ENTRY = {
     "releaseDate": "2025-11-21",
     "albumArtPath": "test path",
     "songs": [
-        {"songName": f"Test Song{i+1}", "songLength": "05:47:36"} for i in range(8)
+        {
+            "songName": f"Test Song{i + 1}",
+            "songLength": "05:47:36",
+            "songRating": 5,
+        }
+        for i in range(8)
     ],
 }
 # endregion

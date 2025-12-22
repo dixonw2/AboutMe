@@ -1,9 +1,10 @@
 import { useState } from "react";
-import InputField from "./InputField";
+import InputField from "@/components/InputField/InputField";
 
 import type { Song } from "@/types/favorite-songs/Song";
 
 import styles from "./SongInput.module.css";
+import { validateSongLength } from "@/utils/date-time";
 
 const SongInput = ({
   onAdd,
@@ -42,10 +43,6 @@ const SongInput = ({
   };
 
   const validateSong = () => {
-    const validateSongLength = () => {
-      return length.match(/^(\d+):(\d{2})$/);
-    };
-
     const validateDuplicate = () => {
       return !currentSongs.find(
         (s) => s.artist.toLowerCase() === artist.toLowerCase()
@@ -57,7 +54,7 @@ const SongInput = ({
       artist.length > 0 &&
       album.length > 0 &&
       genre.length > 0 &&
-      validateSongLength() &&
+      validateSongLength(length) &&
       appleMusicLink.length > 0 &&
       spotifyLink.length > 0 &&
       validateDuplicate()

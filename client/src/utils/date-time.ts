@@ -21,4 +21,9 @@ const convertToDate = (date: string) => {
   return new Date(`${date}T00:00:00`).toLocaleDateString();
 };
 
-export { formatDate, convertToTime, convertToDate };
+const validateSongLength = (length: string) => {
+  // allow HH:MM:SS and MM:SS
+  return /^(?:\d+:[0-5]\d|\d+:[0-5]\d:[0-5]\d)$/.test(length);
+};
+
+export { formatDate, convertToTime, convertToDate, validateSongLength };
